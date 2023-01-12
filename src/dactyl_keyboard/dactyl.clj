@@ -15,30 +15,32 @@
 (def nrows 4)
 (def ncols 5)
 (def trackball-enabled true)
-(def printed-hotswap? true) ; Whether you want the 3d printed version of the hotswap or you ordered some from krepublic
+(def printed-hotswap? false) ; Whether you want the 3d printed version of the hotswap or you ordered some from krepublic
 
 (def α (/ π 8))                        ; curvature of the columns
 (def β (/ π 26))                        ; curvature of the rows
 (def centerrow (- nrows 2.5))             ; controls front-back tilt
 (def centercol 2)                       ; controls left-right tilt / tenting (higher number is more tenting)
 (def tenting-angle (deg2rad 20))            ; or, change this for more precise tenting control
-(def column-style
-  (if (> nrows 5) :orthographic :standard))  ; options include :standard, :orthographic, and :fixed
-; (def column-style :fixed)
+; (def column-style
+  ; (if (> nrows 5) :orthographic :standard))  ; options include :standard, :orthographic, and :fixed
+(def column-style :standard)
 (def pinky-15u false)
 
 (defn column-offset [column] (cond
+                               ; (= column 1) [0 2.82 -4.5]
                                (= column 2) [0 2.82 -4.5]
-                               (= column 3) [0 -1 -4]
-                               (>= column 4) [0 -16 -5.50]            ; original [0 -5.8 5.64]
+                               (= column 3) [0 -2 -4]
+                               (>= column 4) [0 -18 -5.50]            ; original [0 -5.8 5.64]
                                :else [0 -5 1.5]))
 
+; general position of the thumb cluster
 (def thumb-offsets [6 0 10])
 
 (def keyboard-z-offset 23.5)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
 
-(def extra-width 2.5)                   ; extra space between the base of keys; original= 2
-(def extra-height 1.0)                  ; original= 0.5
+(def extra-width 2)                   ; extra space between the base of keys; original= 2
+(def extra-height 0)                  ; original= 0.5
 
 (def wall-z-offset -5)                 ; original=-15 length of the first downward-sloping part of the wall (negative)
 (def wall-xy-offset 5)                  ; offset in the x and/or y direction for the first downward-sloping part of the wall (negative)
@@ -121,16 +123,16 @@
 ;; SA Keycaps ;;
 ;;;;;;;;;;;;;;;;
 
-(def sa-length 18.25)
+(def sa-length 15.25)
 (def sa-double-length 37.5)
-(def sa-cap {1 (let [bl2 (/ 18.5 2)
+(def sa-cap {1 (let [bl2 (/ 15.5 2)
                      m (/ 17 2)
-                     key-cap (cube 18.25 18.25 2)]
+                     key-cap (cube 15.25 15.25 2)]
                     (->> key-cap
                          (translate [0 0 (+ 4 plate-thickness)])
                          (color [220/255 163/255 163/255 1])))
              2 (let [bl2 sa-length
-                     bw2 (/ 18.25 2)
+                     bw2 (/ 15.25 2)
                      key-cap (hull (->> (polygon [[bw2 bl2] [bw2 (- bl2)] [(- bw2) (- bl2)] [(- bw2) bl2]])
                                         (extrude-linear {:height 0.1 :twist 0 :convexity 0})
                                         (translate [0 0 0.05]))
@@ -140,7 +142,7 @@
                     (->> key-cap
                          (translate [0 0 (+ 5 plate-thickness)])
                          (color [127/255 159/255 127/255 1])))
-             1.5 (let [bl2 (/ 18.25 2)
+             1.5 (let [bl2 (/ 15.25 2)
                        bw2 (/ 27.94 2)
                        key-cap (hull (->> (polygon [[bw2 bl2] [bw2 (- bl2)] [(- bw2) (- bl2)] [(- bw2) bl2]])
                                           (extrude-linear {:height 0.1 :twist 0 :convexity 0})
@@ -593,13 +595,13 @@
   (translate [10.5 0 0]
              (union
                ;; Index
-               (finger 47 22 20 10.5)
+               (finger 45 30 26 8)
                ;; Middle
-               (translate [25.5 0 0] (finger 53.5 29 22 9.2))
+               (translate [25.5 0 0] (finger 53 31 27 8.5))
                ;; Ring
-               (translate [(+ 20 25.5) 0 0] (finger 44 28.5 23 8.25))
+               (translate [(+ 20 25.5) 0 0] (finger 46 30 26 8))
                ;; Pinky
-               (translate [(+ 20 25.5 22) 0 0] (finger 30 22.5 20 8.25))))
+               (translate [(+ 20 25.5 22) 0 0] (finger 37 22 25 6.5))))
   )
 
 (def palm
@@ -754,7 +756,7 @@
 (def plate-mount-buckle-height 2)
 (def clamp-buckle (->>
                    (buckle
-                    :include-middle      false
+                    :include-middle      true
                     :triangle-length     1.75
                     :triangle-width      3.4
                     :buckle-width-adjust 0
@@ -823,7 +825,7 @@
                                                      row [0 1]
                                                      :when (or (.contains [2 3] column)
                                                                (not= row lastrow))]
-                                                 (->> bottom-hotswap
+                                                 (->> hotswap
                                                       (key-place column row))))
                                         (apply union
                                                (for [column columns
@@ -1273,7 +1275,7 @@
 (def usb-holder-ref (key-position 0 0 (map - (wall-locate2  0  -1) [0 (/ mount-height 2) 0])))
 
 (def usb-holder-position (map + [5 16 0] [(first usb-holder-ref) (second usb-holder-ref) 2]))
-(def usb-holder-cube   (cube 18.5 35 4))
+(def usb-holder-cube   (cube 15.5 35 4))
 (def usb-holder-holder (translate (map + usb-holder-position [5 -12.9 0]) (difference (cube 21 39 6) (translate [0 0 1] usb-holder-cube))))
 
 (def usb-jack (translate (map + usb-holder-position [5 10 4]) (union
@@ -1339,7 +1341,7 @@
              ;  (screw-insert lastcol 0         bottom-radius top-radius height [-3 6 0])
              (screw-insert lastcol lastrow  bottom-radius top-radius height [-3.5 17 0])
              (screw-insert lastcol 0         bottom-radius top-radius height [-1 2 0])
-             (screw-insert 1 lastrow         bottom-radius top-radius height (if trackball-enabled [1 -16 0] [1 -18.5 0]))))
+             (screw-insert 1 lastrow         bottom-radius top-radius height (if trackball-enabled [1 -16 0] [1 -15.5 0]))))
 
 ; Hole Depth Y: 4.4
 (def screw-insert-height 4)
@@ -1603,7 +1605,7 @@
 
                  palm-attach-rod
 ))
-
+;
 (spit "things/palm-rest.scad" (
                            write-scad
                                         (include "../nutsnbolts/cyl_head_bolt.scad")
@@ -1673,7 +1675,7 @@
                                      thumb-key-clearance
                                      (translate [0 0 -20] (cube 350 350 40)))))
 
-;(spit "things/palm-rest.scad" (write-scad palm-rest))
+(spit "things/palm-rest.scad" (write-scad palm-rest))
 
 (def right-plate (difference
                   (union
@@ -1690,7 +1692,7 @@
                   trrs-holder-hole
                   model-right ; Just rm the whole model-right to make sure there's no obstruction
                   ))
-
+;
 (spit "things/right-plate.scad"
       (write-scad
        (include "../nutsnbolts/cyl_head_bolt.scad")
@@ -1729,6 +1731,7 @@
 
 (spit "things/right-test.scad"
       (write-scad
+      (include "../nutsnbolts/cyl_head_bolt.scad")
        (difference
         (union
          hand-on-test
