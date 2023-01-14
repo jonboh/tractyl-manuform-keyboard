@@ -39,8 +39,8 @@
 
 (def keyboard-z-offset 23.5)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
 
-(def extra-width 2)                   ; extra space between the base of keys; original= 2
-(def extra-height 0)                  ; original= 0.5
+(def extra-width 1)                   ; extra space between the base of keys; original= 2
+(def extra-height -2)                  ; original= 0.5
 
 (def wall-z-offset -5)                 ; original=-15 length of the first downward-sloping part of the wall (negative)
 (def wall-xy-offset 5)                  ; offset in the x and/or y direction for the first downward-sloping part of the wall (negative)
@@ -835,7 +835,7 @@
                                                  (->> hotswap
                                                       (key-place column row))))
                                         (thumb-mr-place (if trackball-enabled bottom-hotswap hotswap))
-                                        (thumb-br-place hotswap)
+                                        (thumb-br-place bottom-hotswap)
                                         (if trackball-enabled nil (thumb-tl-place bottom-hotswap))
                                         (thumb-bl-place bottom-hotswap)
                                         (thumb-tr-place bottom-hotswap))))
@@ -895,14 +895,15 @@
 (def dowel-top-change 0)
 (def dowel-top-height 1.5)
 (def dowell-height 6) ; Dowel height is actually 6mm. But attempting to get it to "snap" in place
-(def dowell (union (cylinder (- (/ dowell-width 2) dowel-top-change) (+ dowell-height dowel-top-height) :fn 50) (cylinder (/ dowell-width 2) dowell-height :fn 50)))
-(def bearing (cylinder (/ 8.5 2) 3)) ; Bearing is actually 6mm x 2.5mm, model it as 8.5mm x 3 to give it room to spin
-(def dowell-bearing (rotate (deg2rad 90) [1 0 0] (union dowell bearing)))
+; (def dowell (union (cylinder (- (/ dowell-width 2) dowel-top-change) (+ dowell-height dowel-top-height) :fn 50) (cylinder (/ dowell-width 2) dowell-height :fn 50)))
+; (def bearing (cylinder (/ 8.5 2) 3)) ; Bearing is actually 6mm x 2.5mm, model it as 8.5mm x 3 to give it room to spin
+; (def dowell-bearing (rotate (deg2rad 90) [1 0 0] (union dowell bearing)))
+(def dowell-bearing (sphere 3))
 (defn rotated_dowell [angle]
   (rotate (deg2rad angle) [0, 0, 1] (rotate (deg2rad axel-angle) [0, 1, 0] (
                                                                              translate [(+ (/ trackball-width-plus-bearing 2) dowel-depth-in-shell) 0 0] (union
                                                                                                                                                           ; Add a cube on the side of the dowell so there's an insertion point when we diff with the shell
-                                                                                                                                                          (translate [(- (/ dowell-width 2)) 0 0] (cube (+ dowell-width 1) (- dowell-height dowel-top-change) dowell-width))
+                                                                                                                                                          ; (translate [(- (/ dowell-width 2)) 0 0] (cube (+ dowell-width 1) (- dowell-height dowel-top-change) dowell-width))
                                                                                                                                                           dowell-bearing
                                                                                                                                                           )
                                                                                        )))
@@ -1147,7 +1148,9 @@
     key-clearance
     thumb-key-clearance
     (translate trackball-origin rotated-bottom-trim)
-    (translate trackball-origin rotated-dowells))))
+    (translate trackball-origin rotated-dowells)
+    ))
+  )
 
 (def trackball-to-case (difference (union
                         ; Trackball mount to left outside of case
@@ -1536,10 +1539,11 @@
 (def palm-length 80)
 (def palm-width 80)
 (def palm-cutoff 32)
-(def palm-support (translate [0 0 (- palm-cutoff)] (difference
-                   (resize [palm-width palm-length 80] (sphere 240))
-                   (translate [0 0 (- (- 100 palm-cutoff))] (cube 400 400 200))
-                    )))
+(def palm-support (translate [-10 10 (- 20 palm-cutoff) ] 
+                             (difference
+                               (resize [palm-width palm-length 80] (sphere 240))
+                               (translate [0 0 (- (- 100 palm-cutoff))] (cube 400 400 200))
+                               )))
 
 (defn palm-rest-hole-rotate [h] (rotate (deg2rad -3) [0 0 1] h))
 (def palm-hole-origin (map + (key-position 3 (+ cornerrow 1) (wall-locate3 0 -1)) [-1.5 -7 -11]) )
@@ -1552,7 +1556,7 @@
 (def buckle-thickness 3)
 (def buckle-length 3.7)
 (def buckle-end-length 14)
-(def buckle-height 4)
+(def buckle-height 4.5) ; this will make the print much easier
 (def buckle-end-width (- buckle-width (* 2 buckle-thickness)))
 (def palm-buckle (buckle
                   :include-middle true
@@ -1574,30 +1578,31 @@
                         :triangle-length triangle-length
                         :buckle-height buckle-height
                          ))
-(def support-length 30)
-(def palm-screw-height 26.5)
+(def support-length 25)
+(def palm-screw-height 60)
 (def positioned-palm-support (->> palm-support
                                   (rotate (deg2rad 20) [0 0 1])
                                   (rotate (deg2rad 17) [1 0 0])
                                   (rotate (+ tenting-angle (deg2rad 11)) [0 1 0])
-                                  (translate [2 -34 15]
+                                  (translate [2 -25 15]
                                              )))
 (def palm-attach-rod (union
-                      (translate [0 (+ (- buckle-length) (/ support-length -2) (/ (+ tent-stand-rad 0.5) 2)) 0]
-                                 (cube buckle-end-width (- support-length (+ tent-stand-rad 0.5)) 5))
+                      ; (translate [0 (+ (- buckle-length) (/ support-length -2) (/ (+ tent-stand-rad 0.5) 2)) 0]
+                      ;            (cube buckle-end-width (- support-length (+ tent-stand-rad 0.5)) 5))
                       (difference
                        (translate [0 (+ (- buckle-length) (- support-length)) (- (/ palm-screw-height 2) (/ 5 2))]
-                                  (cube 13 13 palm-screw-height))
-                       (translate [-0.5 (+ (- buckle-length) (- support-length)) (+ (/ 5 -2) palm-screw-height)]
+                                  (cube 20 20 (- palm-screw-height 0.5))) ; substracted minus one to make the bottom flat when buckle-height==4
+                       (translate [1.5 (+ (- buckle-length) (- support-length)) (+ (/ 5 -2) palm-screw-height)]
                                   (rotate (deg2rad 180) [1 0 0]
                                           (call-module "thread" (+ tent-stand-rad 0.5) palm-screw-height tent-stand-thread-lead)))
                        ; Rm the top bit sticking out
                        (hull positioned-palm-support
-                             (translate [0 (+ (- buckle-length) (- support-length)) (+ palm-screw-height 20)]
+                             (translate [5 (+ (- buckle-length) (- support-length)) (+ palm-screw-height 20)]
                                         (cube 13 13 0.1))
                        ))
 
-                      palm-buckle))
+                      palm-buckle
+                      ))
 
 (def palm-rest (union
                 positioned-palm-support
@@ -1606,11 +1611,9 @@
                  palm-attach-rod
 ))
 ;
-(spit "things/palm-rest.scad" (
-                           write-scad
-                                        (include "../nutsnbolts/cyl_head_bolt.scad")
-                                        palm-rest
-                           ))
+(spit "things/palm-rest.scad" ( write-scad
+                                (include "../nutsnbolts/cyl_head_bolt.scad") ; this line is not being written!!
+                                palm-rest))
 (spit "things/left-palm-rest.scad" (
                                      write-scad
                                      (include "../nutsnbolts/cyl_head_bolt.scad")
@@ -1675,7 +1678,6 @@
                                      thumb-key-clearance
                                      (translate [0 0 -20] (cube 350 350 40)))))
 
-(spit "things/palm-rest.scad" (write-scad palm-rest))
 
 (def right-plate (difference
                   (union
