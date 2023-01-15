@@ -21,7 +21,7 @@
 (def β (/ π 26))                        ; curvature of the rows
 (def centerrow (- nrows 2.5))             ; controls front-back tilt
 (def centercol 2)                       ; controls left-right tilt / tenting (higher number is more tenting)
-(def tenting-angle (deg2rad 20))            ; or, change this for more precise tenting control
+(def tenting-angle (deg2rad 15))            ; or, change this for more precise tenting control
 ; (def column-style
   ; (if (> nrows 5) :orthographic :standard))  ; options include :standard, :orthographic, and :fixed
 (def column-style :standard)
@@ -31,7 +31,7 @@
                                ; (= column 1) [0 2.82 -4.5]
                                (= column 2) [0 2.82 -4.5]
                                (= column 3) [0 -2 -4]
-                               (>= column 4) [0 -18 -5.50]            ; original [0 -5.8 5.64]
+                               (>= column 4) [0 -19 5.50]            ; original [0 -5.8 5.64]
                                :else [0 -5 1.5]))
 
 ; general position of the thumb cluster
@@ -39,8 +39,8 @@
 
 (def keyboard-z-offset 23.5)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
 
-(def extra-width 1)                   ; extra space between the base of keys; original= 2
-(def extra-height -2)                  ; original= 0.5
+(def extra-width 0)                   ; extra space between the base of keys; original= 2
+(def extra-height -3)                  ; original= 0.5
 
 (def wall-z-offset -5)                 ; original=-15 length of the first downward-sloping part of the wall (negative)
 (def wall-xy-offset 5)                  ; offset in the x and/or y direction for the first downward-sloping part of the wall (negative)
@@ -1071,7 +1071,7 @@
   )
 
 (def raised-trackball (translate [0 0 trackball-raise] (sphere (+ (/ trackball-width 2) 0.5))))
-(def trackball-origin (map + thumb-tip-origin [-8.5 10 -5]))
+(def trackball-origin (map + thumb-tip-origin [-8.5 10 -10]))
 
 ;;;;;;;;;;
 ;; Case ;;
