@@ -898,7 +898,14 @@
 ; (def dowell (union (cylinder (- (/ dowell-width 2) dowel-top-change) (+ dowell-height dowel-top-height) :fn 50) (cylinder (/ dowell-width 2) dowell-height :fn 50)))
 ; (def bearing (cylinder (/ 8.5 2) 3)) ; Bearing is actually 6mm x 2.5mm, model it as 8.5mm x 3 to give it room to spin
 ; (def dowell-bearing (rotate (deg2rad 90) [1 0 0] (union dowell bearing)))
-(def dowell-bearing (sphere 3))
+(defn sphere_ [r sides]
+  (let [args (merge {:r r}
+                    (if *fa* {:fa *fa*})
+                    {:fn sides}
+                    (if *fs* {:fs *fs*}))]
+    `(:sphere ~args)))
+
+(def dowell-bearing (sphere_ 1.5 50))
 (defn rotated_dowell [angle]
   (rotate (deg2rad angle) [0, 0, 1] (rotate (deg2rad axel-angle) [0, 1, 0] (
                                                                              translate [(+ (/ trackball-width-plus-bearing 2) dowel-depth-in-shell) 0 0] (union
