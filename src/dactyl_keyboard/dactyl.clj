@@ -24,14 +24,14 @@
 (def tenting-angle (deg2rad 15))            ; or, change this for more precise tenting control
 ; (def column-style
   ; (if (> nrows 5) :orthographic :standard))  ; options include :standard, :orthographic, and :fixed
-(def column-style :standard)
+(def column-style :orthographic)
 (def pinky-15u false)
 
 (defn column-offset [column] (cond
                                ; (= column 1) [0 2.82 -4.5]
-                               (= column 2) [0 2.82 -4.5]
-                               (= column 3) [0 -2 -4]
-                               (>= column 4) [0 -19 5.50]            ; original [0 -5.8 5.64]
+                               (= column 2) [0 2.82 -2.5]
+                               (= column 3) [0 -2 0]
+                               (>= column 4) [0 -19 2.50]            ; original [0 -5.8 5.64]
                                :else [0 -5 1.5]))
 
 ; general position of the thumb cluster
@@ -39,7 +39,7 @@
 
 (def keyboard-z-offset 23.5)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
 
-(def extra-width 0)                   ; extra space between the base of keys; original= 2
+(def extra-width 0.5)                   ; extra space between the base of keys; original= 2
 (def extra-height -3)                  ; original= 0.5
 
 (def wall-z-offset -5)                 ; original=-15 length of the first downward-sloping part of the wall (negative)
@@ -329,9 +329,9 @@
       (->> shape
            (rotate (deg2rad  -7) [1 0 0])
            (rotate (deg2rad -45) [0 1 0])
-           (rotate (deg2rad  27) [0 0 1]) ; original 10
+           (rotate (deg2rad  10) [0 0 1]) ; original 10
            (translate thumborigin)
-           (translate [-21 -12.5 11]))) ; original 1.5u  (translate [-12 -16 3])
+           (translate [-21 -18 11]))) ; original 1.5u  (translate [-12 -16 3])
 (def trackball-middle-translate [-6.5 6 -0.5])
 (def thumb-tip-offset [-35 -16 -6.5])
 (def thumb-tip-origin (map + thumborigin thumb-tip-offset))
@@ -353,7 +353,7 @@
            (translate thumborigin)
            (translate mr-thumb-loc)))
 
-(def br-thumb-loc (map + [-34.5 -44 -20] (if trackball-enabled [2 -12 2] [0 0 0])))
+(def br-thumb-loc (map + [-34.5 -42 -16] (if trackball-enabled [2 -12 2] [0 0 0])))
 (defn thumb-br-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
@@ -362,7 +362,7 @@
            (translate thumborigin)
            (translate br-thumb-loc)))
 
-(def bl-thumb-loc (map + [-44 -23 -24] (if trackball-enabled [2 -12 2] [0 0 0])))
+(def bl-thumb-loc (map + [-44 -21 -20] (if trackball-enabled [2 -12 2] [0 0 0])))
 (defn thumb-bl-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
@@ -867,34 +867,34 @@
                         )))
 (def hotswap-clearance (hotswap-place single-hotswap-clearance))
 
-(spit "things/hotswap.scad" (write-scad (union hotswap-clamp-key-mount (position-socket-clamp (translate [0 (- (- hotswap-buckle-length pin-offset)) 0] hotswap-socket)))))
-(spit "things/hotswap-on-key-test.scad" (write-scad (union
-                                                     buckle-holes-on-key
-;                                                     (color [220/255 120/255 120/255 1] single-hotswap-clearance)
-                                                     unified-pin-hotswap-mount
-                                                     single-plate)))
-(spit "things/hotswap-clamp.scad" (write-scad (if printed-hotswap? hotswap-clamp-key-mount official-hotswap-clamp-key-mount)))
-(spit "things/printed-hotswap-clamp.scad" (write-scad hotswap-clamp))
-(spit "things/hotswap-socket.scad" (write-scad hotswap-socket))
-(spit "things/socket-on-key.scad" (write-scad single-plate-with-hotswap))
-(spit "things/official-hotswap.scad" (write-scad official-hotswap-clamp))
+; (spit "things/hotswap.scad" (write-scad (union hotswap-clamp-key-mount (position-socket-clamp (translate [0 (- (- hotswap-buckle-length pin-offset)) 0] hotswap-socket)))))
+; (spit "things/hotswap-on-key-test.scad" (write-scad (union
+;                                                      buckle-holes-on-key
+; ;                                                     (color [220/255 120/255 120/255 1] single-hotswap-clearance)
+;                                                      unified-pin-hotswap-mount
+;                                                      single-plate)))
+; (spit "things/hotswap-clamp.scad" (write-scad (if printed-hotswap? hotswap-clamp-key-mount official-hotswap-clamp-key-mount)))
+; (spit "things/printed-hotswap-clamp.scad" (write-scad hotswap-clamp))
+; (spit "things/hotswap-socket.scad" (write-scad hotswap-socket))
+; (spit "things/socket-on-key.scad" (write-scad single-plate-with-hotswap))
+; (spit "things/official-hotswap.scad" (write-scad official-hotswap-clamp))
 
 ;;;;;;;;;;;;;;;
 ;; Trackball ;;
 ;;;;;;;;;;;;;;;
 
-(def dowel-depth-in-shell 1.5)
-(def bearing-protrude (- 3 dowel-depth-in-shell)) ; Radius of the baring minus how deep it's going into the shell
+(def dowel-depth-in-shell -0.75) ; -2.25 is just tangentially touching
+(def bearing-protrude (- 1.5 dowel-depth-in-shell)) ; Radius of the baring minus how deep it's going into the shell
 (def trackball-width 34)
-(def trackball-width-plus-bearing (+ bearing-protrude trackball-width 1)) ; Add one just to give some wiggle
+(def trackball-width-plus-bearing (+ bearing-protrude trackball-width 0.5)) ; Add one just to give some wiggle
 (def holder-thickness 4.2)
 (def outer-width (+ (* 2 holder-thickness) trackball-width-plus-bearing))
 
 (def axel-angle 15)
-(def dowell-width 3)
-(def dowel-top-change 0)
-(def dowel-top-height 1.5)
-(def dowell-height 6) ; Dowel height is actually 6mm. But attempting to get it to "snap" in place
+; (def dowell-width 3)
+; (def dowel-top-change 0)
+; (def dowel-top-height 1.5)
+; (def dowell-height 6) ; Dowel height is actually 6mm. But attempting to get it to "snap" in place
 ; (def dowell (union (cylinder (- (/ dowell-width 2) dowel-top-change) (+ dowell-height dowel-top-height) :fn 50) (cylinder (/ dowell-width 2) dowell-height :fn 50)))
 ; (def bearing (cylinder (/ 8.5 2) 3)) ; Bearing is actually 6mm x 2.5mm, model it as 8.5mm x 3 to give it room to spin
 ; (def dowell-bearing (rotate (deg2rad 90) [1 0 0] (union dowell bearing)))
@@ -905,7 +905,7 @@
                     (if *fs* {:fs *fs*}))]
     `(:sphere ~args)))
 
-(def dowell-bearing (sphere_ 1.5 50))
+(def dowell-bearing (sphere_ 1.5 35))
 (defn rotated_dowell [angle]
   (rotate (deg2rad angle) [0, 0, 1] (rotate (deg2rad axel-angle) [0, 1, 0] (
                                                                              translate [(+ (/ trackball-width-plus-bearing 2) dowel-depth-in-shell) 0 0] (union
@@ -1361,13 +1361,13 @@
 (def screw-insert-top-radius (/ 3.9 2))
 (def screw-insert-holes  (screw-insert-all-shapes screw-insert-bottom-radius screw-insert-top-radius screw-insert-height))
 
-(spit "things/screw-test.scad"
-      (write-scad
-       (difference
-        (screw-insert 0 0 (+ screw-insert-bottom-radius 1.65) (+ screw-insert-top-radius 1.65) (+ screw-insert-height 1.5) [0 0 0])
-        (screw-insert 0 0 screw-insert-bottom-radius screw-insert-top-radius screw-insert-height [0 0 0])
-         )
-       ))
+; (spit "things/screw-test.scad"
+;       (write-scad
+;        (difference
+;         (screw-insert 0 0 (+ screw-insert-bottom-radius 1.65) (+ screw-insert-top-radius 1.65) (+ screw-insert-height 1.5) [0 0 0])
+;         (screw-insert 0 0 screw-insert-bottom-radius screw-insert-top-radius screw-insert-height [0 0 0])
+;          )
+;        ))
 
 ; Wall Thickness W:\t1.65
 (def screw-insert-case-radius 1.5)
@@ -1462,9 +1462,9 @@
                     ))
 
 
-(spit "things/test.scad"
-      (write-scad
-        (difference trrs-holder trrs-holder-hole)))
+; (spit "things/test.scad"
+;       (write-scad
+;         (difference trrs-holder trrs-holder-hole)))
 
 (def hand-on-test
   (translate [-5 -60 92]
@@ -1618,18 +1618,18 @@
                  palm-attach-rod
 ))
 ;
-(spit "things/palm-rest.scad" ( write-scad
-                                (include "../nutsnbolts/cyl_head_bolt.scad") ; this line is not being written!!
-                                palm-rest))
-(spit "things/left-palm-rest.scad" (
-                                     write-scad
-                                     (include "../nutsnbolts/cyl_head_bolt.scad")
-                                     (mirror [-1 0 0] palm-rest)
-                                     ))
-
-(spit "things/palm-attach-test.scad" (write-scad
-                                       palm-attach-rod
-                                       ))
+; (spit "things/palm-rest.scad" ( write-scad
+;                                 (include "../nutsnbolts/cyl_head_bolt.scad") ; this line is not being written!!
+;                                 palm-rest))
+; (spit "things/left-palm-rest.scad" (
+;                                      write-scad
+;                                      (include "../nutsnbolts/cyl_head_bolt.scad")
+;                                      (mirror [-1 0 0] palm-rest)
+;                                      ))
+;
+; (spit "things/palm-attach-test.scad" (write-scad
+;                                        palm-attach-rod
+;                                        ))
 
 
 (def trackball-subtract (union
@@ -1676,30 +1676,31 @@
                                           (translate trackball-origin trackball-insertion-cyl)
                                           ))
 
-(spit "things/trackball-test.scad" (write-scad
-                                    (difference
-                                    (union
-                                     trackball-mount-translated-to-model
-                                     trackball-walls)
-                                     trackball-subtract
-                                     thumb-key-clearance
-                                     (translate [0 0 -20] (cube 350 350 40)))))
+; (spit "things/trackball-test.scad" (write-scad
+;                                     (difference
+;                                     (union
+;                                      trackball-mount-translated-to-model
+;                                      trackball-walls)
+;                                      trackball-subtract
+;                                      thumb-key-clearance
+;                                      (translate [0 0 -20] (cube 350 350 40)))))
 
 
 (def right-plate (difference
                   (union
                    (if trackball-enabled trackball-mount-translated-to-model nil)
-                   usb-holder-holder
-                   trrs-holder
-                   (translate [0 0 (/ bottom-plate-thickness -2)] plate-attempt)
-                   (translate thumb-tent-origin tent-nut)
-                   (translate index-tent-origin tent-nut))
-                  (translate thumb-tent-origin tent-thread)
-                  (translate index-tent-origin tent-thread)
-                  (translate [0 0 -22] (cube 350 350 40))
-                  usb-jack
-                  trrs-holder-hole
-                  model-right ; Just rm the whole model-right to make sure there's no obstruction
+                   ; usb-holder-holder
+                   ; trrs-holder
+                   ; (translate [0 0 (/ bottom-plate-thickness -2)] plate-attempt)
+                   ; (translate thumb-tent-origin tent-nut)
+                   ; (translate index-tent-origin tent-nut)
+                   )
+                  ; (translate thumb-tent-origin tent-thread)
+                  ; (translate index-tent-origin tent-thread)
+                  ; (translate [0 0 -22] (cube 350 350 40))
+                  ; usb-jack
+                  ; trrs-holder-hole
+                  ; model-right ; Just rm the whole model-right to make sure there's no obstruction
                   ))
 ;
 (spit "things/right-plate.scad"
@@ -1707,53 +1708,53 @@
        (include "../nutsnbolts/cyl_head_bolt.scad")
        right-plate
        ))
-
-(spit "things/left-plate.scad"
-      (write-scad
-       (include "../nutsnbolts/cyl_head_bolt.scad")
-       (mirror [-1 0 0] right-plate)
-))
-
-(spit "things/tent-nut.scad" (write-scad
-                              (include "../nutsnbolts/cyl_head_bolt.scad")
-                              tent-nut))
-
-(spit "things/tent-foot.scad"
-      (write-scad tent-foot)
-      )
-(spit "things/tent-stand.scad"
-      (write-scad
-       (include "../nutsnbolts/cyl_head_bolt.scad")
-       tent-stand
-       )
-      )
-
-(spit "things/left.scad"
-      (write-scad (mirror [-1 0 0] model-right)))
-(spit "things/tent-all.scad" (write-scad
-                              (include "../nutsnbolts/cyl_head_bolt.scad")
-                              (union
-                                tent-foot
-                               (translate [0 0 (+ 3 tent-ball-rad (/ tent-foot-thickness 2))] tent-stand)
-                                )
-                               ))
-
-(spit "things/right-test.scad"
-      (write-scad
-      (include "../nutsnbolts/cyl_head_bolt.scad")
-       (difference
-        (union
-         hand-on-test
-         (color [220/255 120/255 120/255 1] hotswap-tester)
-         (color [220/255 163/255 163/255 1] right-plate)
-         model-right
-         (translate (map + palm-hole-origin [0 (+ buckle-length 3) (/ buckle-height 2)])
-                    (palm-rest-hole-rotate palm-rest))
-;         (if trackball-enabled (translate trackball-origin test-ball) nil)
-         thumbcaps
-         caps)
-
-        (translate [0 0 -20] (cube 350 350 40)))))
+;
+; (spit "things/left-plate.scad"
+;       (write-scad
+;        (include "../nutsnbolts/cyl_head_bolt.scad")
+;        (mirror [-1 0 0] right-plate)
+; ))
+;
+; (spit "things/tent-nut.scad" (write-scad
+;                               (include "../nutsnbolts/cyl_head_bolt.scad")
+;                               tent-nut))
+;
+; (spit "things/tent-foot.scad"
+;       (write-scad tent-foot)
+;       )
+; (spit "things/tent-stand.scad"
+;       (write-scad
+;        (include "../nutsnbolts/cyl_head_bolt.scad")
+;        tent-stand
+;        )
+;       )
+;
+; (spit "things/left.scad"
+;       (write-scad (mirror [-1 0 0] model-right)))
+; (spit "things/tent-all.scad" (write-scad
+;                               (include "../nutsnbolts/cyl_head_bolt.scad")
+;                               (union
+;                                 tent-foot
+;                                (translate [0 0 (+ 3 tent-ball-rad (/ tent-foot-thickness 2))] tent-stand)
+;                                 )
+;                                ))
+;
+; (spit "things/right-test.scad"
+;       (write-scad
+;       (include "../nutsnbolts/cyl_head_bolt.scad")
+;        (difference
+;         (union
+;          hand-on-test
+;          (color [220/255 120/255 120/255 1] hotswap-tester)
+;          (color [220/255 163/255 163/255 1] right-plate)
+;          model-right
+;          (translate (map + palm-hole-origin [0 (+ buckle-length 3) (/ buckle-height 2)])
+;                     (palm-rest-hole-rotate palm-rest))
+; ;         (if trackball-enabled (translate trackball-origin test-ball) nil)
+;          thumbcaps
+;          caps)
+;
+;         (translate [0 0 -20] (cube 350 350 40)))))
 
 (spit "things/right.scad" (write-scad
                            (include "../nutsnbolts/cyl_head_bolt.scad")
