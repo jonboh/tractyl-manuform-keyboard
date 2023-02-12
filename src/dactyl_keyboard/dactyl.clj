@@ -1690,18 +1690,18 @@
 (def right-plate (difference
                   (union
                    (if trackball-enabled trackball-mount-translated-to-model nil)
-                   ; usb-holder-holder
-                   ; trrs-holder
-                   ; (translate [0 0 (/ bottom-plate-thickness -2)] plate-attempt)
-                   ; (translate thumb-tent-origin tent-nut)
-                   ; (translate index-tent-origin tent-nut)
+                   usb-holder-holder
+                   trrs-holder
+                   (translate [0 0 (/ bottom-plate-thickness -2)] plate-attempt)
+                   (translate thumb-tent-origin tent-nut)
+                   (translate index-tent-origin tent-nut)
                    )
-                  ; (translate thumb-tent-origin tent-thread)
-                  ; (translate index-tent-origin tent-thread)
-                  ; (translate [0 0 -22] (cube 350 350 40))
-                  ; usb-jack
-                  ; trrs-holder-hole
-                  ; model-right ; Just rm the whole model-right to make sure there's no obstruction
+                  (translate thumb-tent-origin tent-thread)
+                  (translate index-tent-origin tent-thread)
+                  (translate [0 0 -22] (cube 350 350 40))
+                  usb-jack
+                  trrs-holder-hole
+                  model-right ; Just rm the whole model-right to make sure there's no obstruction
                   ))
 ;
 (spit "things/right-plate.scad"
