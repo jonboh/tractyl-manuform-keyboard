@@ -333,7 +333,7 @@
            (translate thumborigin)
            (translate [-21 -18 11]))) ; original 1.5u  (translate [-12 -16 3])
 (def trackball-middle-translate [-6.5 6 -0.5])
-(def thumb-tip-offset [-35 -16 -6.5])
+(def thumb-tip-offset [-36 -20 -6.5])
 (def thumb-tip-origin (map + thumborigin thumb-tip-offset))
 (def tl-thumb-loc (map + thumb-tip-offset (if trackball-enabled trackball-middle-translate [0 0 0])))
 (defn thumb-tl-place [shape]
@@ -353,7 +353,7 @@
            (translate thumborigin)
            (translate mr-thumb-loc)))
 
-(def br-thumb-loc (map + [-34.5 -42 -16] (if trackball-enabled [2 -12 2] [0 0 0])))
+(def br-thumb-loc (map + [-34.5 -42 -16] (if trackball-enabled [1 -13 2] [0 0 0])))
 (defn thumb-br-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
@@ -362,7 +362,7 @@
            (translate thumborigin)
            (translate br-thumb-loc)))
 
-(def bl-thumb-loc (map + [-44 -21 -20] (if trackball-enabled [2 -12 2] [0 0 0])))
+(def bl-thumb-loc (map + [-44 -21 -20] (if trackball-enabled [2 -16 2] [0 0 0])))
 (defn thumb-bl-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
