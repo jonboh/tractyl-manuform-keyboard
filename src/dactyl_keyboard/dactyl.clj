@@ -1668,6 +1668,8 @@
                                            (translate trackball-origin trackball-mount)
                                            trackball-walls
                                            trackball-to-case
+                                           ; key-clearance ; uncomment to check clearance of trackball
+                                           ; thumb-key-clearance ; uncomment to check clearance of trackball
                                            )
                                           trackball-subtract
                                           key-clearance
