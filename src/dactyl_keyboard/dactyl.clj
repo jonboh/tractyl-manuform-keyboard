@@ -1635,7 +1635,7 @@
                          ; Subtract out the actual trackball
                          (translate trackball-origin (dowell-angle raised-trackball))
                          ; Subtract out space for the cup, because sometimes things from the keyboard creep in
-                         (translate trackball-origin (sphere (/ trackball-width-plus-bearing 2)))
+                         (translate trackball-origin (sphere trackball-radius-plus-bearing))
                          ; Just... double check that we have the full dowell negative
                          (translate trackball-origin rotated-dowells)
                          hotswap-clearance))
