@@ -31,7 +31,7 @@
                                ; (= column 1) [0 2.82 -4.5]
                                (= column 2) [0 2.82 -2.5]
                                (= column 3) [0 -2 0]
-                               (>= column 4) [0 -19 2.50]            ; original [0 -5.8 5.64]
+                               (>= column 4) [0 -25 2.50]            ; original [0 -5.8 5.64]
                                :else [0 -5 1.5]))
 
 ; general position of the thumb cluster
