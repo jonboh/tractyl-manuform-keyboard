@@ -1346,12 +1346,12 @@
 
 (defn screw-insert-all-shapes [bottom-radius top-radius height]
       (union (screw-insert 0 0         bottom-radius top-radius height [7.5 7 0])
-             (screw-insert 0 lastrow   bottom-radius top-radius height (if trackball-enabled [-2 33 0] [0 15 0]))
+             (screw-insert 0 lastrow   bottom-radius top-radius height (if trackball-enabled [-0.5 33 0] [0 15 0]))
              ;  (screw-insert lastcol lastrow  bottom-radius top-radius height [-5 13 0])
              ;  (screw-insert lastcol 0         bottom-radius top-radius height [-3 6 0])
-             (screw-insert lastcol lastrow  bottom-radius top-radius height [-3.5 17 0])
+             (screw-insert lastcol lastrow  bottom-radius top-radius height [-1.5 17 0])
              (screw-insert lastcol 0         bottom-radius top-radius height [-1 2 0])
-             (screw-insert 1 lastrow         bottom-radius top-radius height (if trackball-enabled [1 -16 0] [1 -15.5 0]))))
+             (screw-insert 1 lastrow         bottom-radius top-radius height (if trackball-enabled [5 -20 0] [1 -15.5 0]))))
 
 ; Hole Depth Y: 4.4
 (def screw-insert-height 4)
