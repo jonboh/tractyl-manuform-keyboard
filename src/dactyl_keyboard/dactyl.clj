@@ -1545,14 +1545,14 @@
 (def palm-length 80)
 (def palm-width 80)
 (def palm-cutoff 32)
-(def palm-support (translate [-10 10 (- 20 palm-cutoff) ] 
+(def palm-support (translate [0 -10 (- 10 palm-cutoff) ] 
                              (difference
                                (resize [palm-width palm-length 80] (sphere 240))
                                (translate [0 0 (- (- 100 palm-cutoff))] (cube 400 400 200))
                                )))
 
 (defn palm-rest-hole-rotate [h] (rotate (deg2rad -3) [0 0 1] h))
-(def palm-hole-origin (map + (key-position 3 (+ cornerrow 1) (wall-locate3 0 -1)) [-1.5 -7 -11]) )
+(def palm-hole-origin (map + (key-position 3 (+ cornerrow 1) (wall-locate3 0 -1)) [-1.5 -12 -11]) )
 
 (def triangle-length 7)
 (def triangle-width 5)
@@ -1584,17 +1584,17 @@
                         :triangle-length triangle-length
                         :buckle-height buckle-height
                          ))
-(def support-length 25)
-(def palm-screw-height 60)
+(def support-length 35)
+(def palm-screw-height 40)
 (def positioned-palm-support (->> palm-support
-                                  (rotate (deg2rad 20) [0 0 1])
-                                  (rotate (deg2rad 17) [1 0 0])
-                                  (rotate (+ tenting-angle (deg2rad 11)) [0 1 0])
+                                  (rotate (deg2rad 00) [0 0 1])
+                                  (rotate (deg2rad 5) [1 0 0])
+                                  (rotate (+ tenting-angle (deg2rad 00)) [0 1 0])
                                   (translate [2 -25 15]
                                              )))
 (def palm-attach-rod (union
-                      ; (translate [0 (+ (- buckle-length) (/ support-length -2) (/ (+ tent-stand-rad 0.5) 2)) 0]
-                      ;            (cube buckle-end-width (- support-length (+ tent-stand-rad 0.5)) 5))
+                      (translate [0 (+ (- buckle-length) (/ support-length -2) (/ (+ tent-stand-rad 0.5) 2)) 0]
+                                 (cube buckle-end-width (- support-length (+ tent-stand-rad 0.5)) buckle-height))
                       (difference
                        (translate [0 (+ (- buckle-length) (- support-length)) (- (/ palm-screw-height 2) (/ 5 2))]
                                   (cube 20 20 (- palm-screw-height 0.5))) ; substracted minus one to make the bottom flat when buckle-height==4
@@ -1617,9 +1617,9 @@
                  palm-attach-rod
 ))
 ;
-; (spit "things/palm-rest.scad" ( write-scad
-;                                 (include "../nutsnbolts/cyl_head_bolt.scad") ; this line is not being written!!
-;                                 palm-rest))
+(spit "things/palm-rest.scad" ( write-scad
+                                (include "../nutsnbolts/cyl_head_bolt.scad") ; this line is not being written!!
+                                palm-rest))
 ; (spit "things/left-palm-rest.scad" (
 ;                                      write-scad
 ;                                      (include "../nutsnbolts/cyl_head_bolt.scad")
