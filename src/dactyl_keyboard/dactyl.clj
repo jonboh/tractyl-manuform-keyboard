@@ -756,7 +756,7 @@
 (def plate-mount-buckle-height 2)
 (def clamp-buckle (->>
                    (buckle
-                    :include-middle      true
+                    :include-middle      false
                     :triangle-length     1.75
                     :triangle-width      3.4
                     :buckle-width-adjust 0
