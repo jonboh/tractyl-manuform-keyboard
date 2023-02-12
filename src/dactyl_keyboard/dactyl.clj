@@ -856,24 +856,26 @@
 
 (def hotswap-tester (hotswap-place unified-pin-hotswap-mount))
 (def single-hotswap-clearance
-  (->>
-   (cube (+ socket-width 4) (+ hotswap-buckle-length 4) (+ socket-height 3))
-   (translate [0 (+ distance-from-socket) -1.5])
-   (translate [0 (- hotswap-buckle-length) 0])
-   position-socket-clamp
-   (rotate (deg2rad 180) [0 0 1])
-   (translate
-    [0 (- buckle-hole-y-translate distance-from-socket plate-mount-buckle-height 0.25) (- socket-height)]
-                        )))
+  (union
+    (->>
+      (cube (+ socket-width 5) (+ hotswap-buckle-length 5) (+ socket-height 3))
+      )
+    (->>
+      (cube (+ socket-width 7) (+ hotswap-buckle-length 8) (+ socket-height 4))
+      (translate [0.5 5 -1])
+      )
+    )
+  )
 (def hotswap-clearance (hotswap-place single-hotswap-clearance))
 
-; (spit "things/hotswap.scad" (write-scad (union hotswap-clamp-key-mount (position-socket-clamp (translate [0 (- (- hotswap-buckle-length pin-offset)) 0] hotswap-socket)))))
-; (spit "things/hotswap-on-key-test.scad" (write-scad (union
-;                                                      buckle-holes-on-key
-; ;                                                     (color [220/255 120/255 120/255 1] single-hotswap-clearance)
-;                                                      unified-pin-hotswap-mount
-;                                                      single-plate)))
-; (spit "things/hotswap-clamp.scad" (write-scad (if printed-hotswap? hotswap-clamp-key-mount official-hotswap-clamp-key-mount)))
+(spit "things/hotswap.scad" (write-scad (union hotswap-clamp-key-mount (position-socket-clamp (translate [0 (- (- hotswap-buckle-length pin-offset)) 0] hotswap-socket)))))
+(spit "things/hotswap-on-key-test.scad" (write-scad (union
+                                                      (color [220/255 120/255 120/255 1] single-hotswap-clearance)
+                                                      ; unified-pin-hotswap-mount
+                                                      single-plate
+                                                      (->> official-hotswap-clamp-key-mount (rotate (deg2rad 180) [0 0 1]) (translate [0 7 -5.5]))
+                                                      )))
+(spit "things/hotswap-clamp.scad" (write-scad (if printed-hotswap? hotswap-clamp-key-mount official-hotswap-clamp-key-mount)))
 ; (spit "things/printed-hotswap-clamp.scad" (write-scad hotswap-clamp))
 ; (spit "things/hotswap-socket.scad" (write-scad hotswap-socket))
 ; (spit "things/socket-on-key.scad" (write-scad single-plate-with-hotswap))
