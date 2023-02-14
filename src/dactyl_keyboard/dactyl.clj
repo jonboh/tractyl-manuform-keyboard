@@ -1440,9 +1440,7 @@
            (hull (cut (key-wall-brace lastcol cornerrow 0 -1 br lastcol cornerrow 1 0 br)) hull-with))))
 
 (def bottom-plate-thickness 2)
-(def plate-attempt (difference
-                    (extrude-linear {:height bottom-plate-thickness}
-                                    (union
+(def plate-outline-semifilled (union
                                      ; pro micro wall
                                      (for [x (range 0 (- ncols 1))] (hull  (cut (key-wall-brace x 0 0 1 web-post-tl x       0 0 1 web-post-tr)) (translate (key-position x lastrow [0 0 0]) (square (+ keyswitch-width 15) keyswitch-height))))
                                      (for [x (range 1 ncols)] (hull (cut (key-wall-brace x 0 0 1 web-post-tl (dec x) 0 0 1 web-post-tr)) (translate (key-position x 2 [0 0 0]) (square 1 1))))
@@ -1454,16 +1452,20 @@
                                      (hull (cut back-convex-thumb-wall-2) (translate bl-thumb-loc (square 1 1)))
                                      (hull (cut thumb-corners))
                                      (hull (cut thumb-to-left-wall) (translate (key-position (- lastcol 1) (- lastrow 1) [0 0 0]) (square 1 1)))
-                                     (hull (cut non-thumb-walls))
-                                      )
+                                     (cut non-thumb-walls)
+                                      ))
+(def filled-plate (union ; hacky way to fill this non-convex geometry. Hull would remove some inside corners
+                         plate-outline-semifilled
+                        (for [x (range 1 0.6 -0.03)] (scale [x x x] plate-outline-semifilled ))))
+(def plate-attempt (difference
+                    (extrude-linear {:height bottom-plate-thickness}
+                                    filled-plate
                                     )
                     (translate [0 0 -10] screw-insert-screw-holes)
                     ))
 
 
-; (spit "things/test.scad"
-;       (write-scad
-;         (difference trrs-holder trrs-holder-hole)))
+; (spit "things/test.scad" (write-scad plate-attempt))
 
 (def hand-on-test
   (translate [-5 -60 92]
