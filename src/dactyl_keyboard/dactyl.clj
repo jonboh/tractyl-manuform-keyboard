@@ -1526,7 +1526,7 @@
                  ))
 
 (def thumb-tent-origin (map + [-22 -74 -1] (if trackball-enabled [3 -5 0] [0 0 0])))
-(def index-tent-origin [-48 22 -1])
+(def index-tent-origin [-45 22 -1])
 
 (def tent-nut-height 6)
 (def tent-thread
