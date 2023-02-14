@@ -760,11 +760,11 @@
                     :triangle-length     1.75
                     :triangle-width      3.4
                     :buckle-width-adjust 0
-                    :buckle-width        plate-mount-buckle-width
+                    :buckle-width        (- plate-mount-buckle-width 0.4)
                     :buckle-thickness    1.8
-                    :buckle-length       (+ socket-height plate-thickness -0.1) ; Remove some length to make less wiggle room
+                    :buckle-length       (+ socket-height plate-thickness 0.00) ; Remove some length to make less wiggle room
                     :buckle-end-length   0
-                    :buckle-height       (+ plate-mount-buckle-height 0.35)) ; Add more thickness than the holes to account for wanting no wiggle room
+                    :buckle-height       (+ plate-mount-buckle-height 0.05)) ; Add more thickness than the holes to account for wanting no wiggle room
                    (rotate (deg2rad 90) [1 0 0])
                    (translate [0  clamp-buckle-y-offset (+ socket-height plate-thickness)])))
 (def hotswap-clamp-key-mount
