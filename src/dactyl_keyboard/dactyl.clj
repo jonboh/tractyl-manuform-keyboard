@@ -1260,7 +1260,7 @@
                             (key-wall-brace 3 lastrow 0 -1 web-post-bl 3 lastrow 0.25 -1.75 web-post-br)
                             (key-wall-brace 3 lastrow 0 -1 web-post-br 4 cornerrow 0 -1 web-post-bl)
 
-;                            (for [x (range 5 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl (dec x) cornerrow 0 -1 web-post-br))
+                            (for [x (range 5 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl (dec x) cornerrow 0 -1 web-post-br))
                             ; Right before the start of the thumb
                             (wall-brace thumb-tr-place  0 -1 thumb-post-br (partial key-place 3 lastrow)  0 -1 web-post-bl)
                             )
