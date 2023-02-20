@@ -996,7 +996,7 @@
                             (wall-brace (partial key-place 0 0) 0 1 web-post-tl (partial left-key-place 0 1) 0 1 web-post)
                             (wall-brace (partial left-key-place 0 1) 0 1 web-post (partial left-key-place 0 1) -1 0 web-post)
                             ; front wall
-                            (key-wall-brace 3 lastrow 0 -1 web-post-bl 3 lastrow 0.25 -1.75 web-post-br)
+                            (key-wall-brace 3 lastrow 0 -1 web-post-bl 3 lastrow 0 -1 web-post-br)
                             (key-wall-brace 3 lastrow 0 -1 web-post-br 4 cornerrow 0 -1 web-post-bl)
 
                             (for [x (range 5 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl (dec x) cornerrow 0 -1 web-post-br))
