@@ -36,7 +36,7 @@
 ; general position of the thumb cluster
 (def thumb-offsets [6 0 10])
 
-(def keyboard-z-offset 23.5)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
+(def keyboard-z-offset 17)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
 
 (def extra-width 0.5)                   ; extra space between the base of keys; original= 2
 (def extra-height -3)                  ; original= 0.5
@@ -375,29 +375,29 @@
            (rotate (deg2rad -45) [0 1 0])
            (rotate (deg2rad  10) [0 0 1]) ; original 10
            (translate thumborigin)
-           (translate [-21 -18 11]))) ; original 1.5u  (translate [-12 -16 3])
+           (translate [-21 -18 13]))) ; original 1.5u  (translate [-12 -16 3])
 (def trackball-middle-translate [-6.5 6 -0.5])
-(def thumb-tip-offset [-36 -20 -6.5])
+(def thumb-tip-offset [-44 -18 -3])
 (def thumb-tip-origin (map + thumborigin thumb-tip-offset))
-(def tl-thumb-loc (map + thumb-tip-offset (if trackball-enabled trackball-middle-translate [0 0 0])))
+(def tl-thumb-loc (map + [-50 -12 -4]))
 (defn thumb-tl-place [shape]
       (->> shape
-           (rotate (deg2rad  -12) [1 0 0])
-           (rotate (deg2rad -54) [0 1 0])
-           (rotate (deg2rad  35) [0 0 1]) ; original 10
+           (rotate (deg2rad  40) [1 0 0])
+           (rotate (deg2rad  -40) [0 1 0])
+           (rotate (deg2rad  0) [0 0 1]) ; original 10
            (translate thumborigin)
            (translate tl-thumb-loc))) ; original 1.5u (translate [-32 -15 -2])))
 
-(def mr-thumb-loc (map + [-23.5 -36.5 -2] (if trackball-enabled trackball-middle-translate [0 0 0])))
+(def mr-thumb-loc (map + [-26.5 -34.5 -2] (if trackball-enabled trackball-middle-translate trackball-middle-translate)))
 (defn thumb-mr-place [shape]
       (->> shape
-           (rotate (deg2rad  -12) [1 0 0])
-           (rotate (deg2rad -54) [0 1 0])
-           (rotate (deg2rad  35) [0 0 1])
+           (rotate (deg2rad  -18) [1 0 0])
+           (rotate (deg2rad -55) [0 1 0])
+           (rotate (deg2rad  37) [0 0 1])
            (translate thumborigin)
            (translate mr-thumb-loc)))
 
-(def br-thumb-loc (map + [-34.5 -42 -16] (if trackball-enabled [1 -13 2] [0 0 0])))
+(def br-thumb-loc (map + [-34.5 -42 -16] (if trackball-enabled [1 -13 2] [1 -13 2])))
 (defn thumb-br-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
@@ -406,7 +406,7 @@
            (translate thumborigin)
            (translate br-thumb-loc)))
 
-(def bl-thumb-loc (map + [-44 -21 -20] (if trackball-enabled [2 -16 2] [0 0 0])))
+(def bl-thumb-loc (map + [-44 -21 -20] (if trackball-enabled [2 -16 2] [2 -16 2])))
 (defn thumb-bl-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
@@ -421,7 +421,8 @@
         (thumb-mr-place shape)
         (thumb-br-place shape)
        (if trackball-enabled nil (thumb-tl-place shape))
-        (thumb-bl-place shape)))
+        (thumb-bl-place shape)
+        ))
 
 (defn thumb-15x-layout [shape]
       (union
@@ -851,7 +852,7 @@
                                  (key-place column row))))
                     trackball-hotswap-clearance))
 
-(defn trackball-mount-rotate [thing] (rotate (deg2rad -12) [0 0 1]
+(defn trackball-mount-rotate [thing] (rotate (deg2rad 45) [0 0 1]
                                              (rotate (deg2rad 34) [1 0 0]
                                                      (rotate (deg2rad -39) [0 1 0] thing))
                                              ))
@@ -1393,7 +1394,7 @@
                  ))
 
 (def thumb-tent-origin (map + [-22 -74 -1] (if trackball-enabled [3 -5 0] [0 0 0])))
-(def index-tent-origin [-45 22 -1])
+(def index-tent-origin [-55 22 -1])
 
 (def tent-nut-height 6)
 (def tent-thread
