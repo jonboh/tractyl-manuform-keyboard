@@ -1254,7 +1254,8 @@
              ;  (screw-insert lastcol 0         bottom-radius top-radius height [-3 6 0])
              (screw-insert lastcol lastrow  bottom-radius top-radius height [-1.5 17 0])
              (screw-insert lastcol 0         bottom-radius top-radius height [-1 2 0])
-             (screw-insert 1 lastrow         bottom-radius top-radius height (if trackball-enabled [5 -20 0] [1 -15.5 0]))))
+             (screw-insert 1 lastrow         bottom-radius top-radius height (if true [2.5 -30 0] [1 -15.5 0]))
+             ))
 
 ; Hole Depth Y: 4.4
 (def screw-insert-height 4)
@@ -1431,7 +1432,7 @@
                 (rotated-ball-hook 270 false)
                  ))
 
-(def thumb-tent-origin (map + [-22 -74 -1] (if trackball-enabled [3 -5 0] [0 0 0])))
+(def thumb-tent-origin (map + [-22 -74 -1] [0 0 0]))
 (def index-tent-origin [-55 22 -1])
 
 (def tent-nut-height 6)
