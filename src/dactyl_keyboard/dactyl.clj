@@ -1361,7 +1361,8 @@
                                       ))
 (def filled-plate (union ; hacky way to fill this non-convex geometry. Hull would remove some inside corners
                          plate-outline-semifilled
-                        (for [x (range 1 0.6 -0.03)] (scale [x x x] plate-outline-semifilled ))))
+                        (for [x (range 1 0.6 -0.03)] (scale [x x x] plate-outline-semifilled ))
+                        ))
 (def plate-attempt (difference
                     (extrude-linear {:height bottom-plate-thickness}
                                     filled-plate
