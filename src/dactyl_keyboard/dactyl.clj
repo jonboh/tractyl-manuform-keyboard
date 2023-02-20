@@ -379,12 +379,12 @@
 (def trackball-middle-translate [-6.5 6 -0.5])
 (def thumb-tip-offset [-44 -18 -3])
 (def thumb-tip-origin (map + thumborigin thumb-tip-offset))
-(def tl-thumb-loc (map + [-50 -12 -4]))
+(def tl-thumb-loc (map + [-48 -13 -5]))
 (defn thumb-tl-place [shape]
       (->> shape
-           (rotate (deg2rad  40) [1 0 0])
-           (rotate (deg2rad  -40) [0 1 0])
-           (rotate (deg2rad  0) [0 0 1]) ; original 10
+           (rotate (deg2rad  20) [1 0 0])
+           (rotate (deg2rad  -50) [0 1 0])
+           (rotate (deg2rad  30) [0 0 1]) ; original 10
            (translate thumborigin)
            (translate tl-thumb-loc))) ; original 1.5u (translate [-32 -15 -2])))
 
@@ -397,7 +397,7 @@
            (translate thumborigin)
            (translate mr-thumb-loc)))
 
-(def br-thumb-loc (map + [-34.5 -42 -16] (if trackball-enabled [1 -13 2] [1 -13 2])))
+(def br-thumb-loc (map + [-34.5 -42 -17] (if trackball-enabled [1 -13 2] [1 -13 2])))
 (defn thumb-br-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
@@ -406,7 +406,7 @@
            (translate thumborigin)
            (translate br-thumb-loc)))
 
-(def bl-thumb-loc (map + [-44 -21 -20] (if trackball-enabled [2 -16 2] [2 -16 2])))
+(def bl-thumb-loc (map + [-44 -21 -21] (if trackball-enabled [2 -16 2] [2 -16 2])))
 (defn thumb-bl-place [shape]
       (->> shape
            (rotate (deg2rad   -18) [1 0 0])
@@ -1040,36 +1040,59 @@
 
 (def thumb-to-left-wall (union
                          ; clunky bit on the top left thumb connection  (normal connectors don't work well)
+                         (hull 
+                          (left-key-place cornerrow -1 (translate (wall-locate1 -1 0) web-post))
+                          (left-key-place cornerrow -1 (translate (wall-locate2 -1 0) web-post))
+                          (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) web-post))
+                          (key-place 0 (- lastrow 1) web-post-bl)
+                          (thumb-tl-place web-post-tl)
+                          (thumb-tl-place web-post-tr)
+                           )
                          (bottom-hull
-                          (left-key-place cornerrow -1 (translate (wall-locate2 -1 0) web-post))
                           (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) web-post))
-                          (thumb-bl-place (translate (wall-locate2 -2 1) web-post-tr))
-                          (thumb-bl-place (translate (wall-locate3 -3 1) web-post-tr)))
+                          (thumb-tl-place web-post-tl)
+                          )
+                         (bottom-hull
+                          (thumb-tl-place web-post-tl)
+                          (thumb-tl-place web-post-bl)
+                          )
+                         (bottom-hull
+                          (thumb-tl-place web-post-tl)
+                          (thumb-tl-place web-post-bl)
+                          )
+                         (bottom-hull
+                          (thumb-tl-place web-post-bl)
+                          (thumb-bl-place web-post-tl)
+                          (thumb-bl-place (translate (wall-locate2 -1 1) web-post-tl))
+                          (thumb-bl-place (translate (wall-locate2 -2 0) web-post-tl))
+                          )
                          (hull
-                          (left-key-place cornerrow -1 (translate (wall-locate2 -1 0) web-post))
-                          (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) web-post))
-                          (thumb-bl-place (translate (wall-locate2 -2 1) web-post-tr))
-                          (thumb-bl-place (translate (wall-locate3 -2 1) web-post-tr))
-                          (thumb-tl-place web-post-tl))
-                         (hull
-                          (left-key-place cornerrow -1 web-post)
-                          (left-key-place cornerrow -1 (translate (wall-locate1 -1 0) web-post))
-                          (left-key-place cornerrow -1 (translate (wall-locate2 -1 0) web-post))
-                          (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) web-post))
-                          (thumb-tl-place web-post-tl))
-                         (hull
-                          (left-key-place cornerrow -1 web-post)
-                          (left-key-place cornerrow -1 (translate (wall-locate1 -1 0) web-post))
-                          (key-place 0 cornerrow web-post-bl)
-                          (thumb-tl-place web-post-tl))
-                         (hull
+                          (thumb-tl-place web-post-bl)
+                          (thumb-bl-place web-post-tl)
                           (thumb-bl-place web-post-tr)
-                          (thumb-bl-place (translate (wall-locate1 -0.3 1) web-post-tr))
-                          (thumb-bl-place (translate (wall-locate2 -0.3 1) web-post-tr))
-                          (thumb-bl-place (translate (wall-locate3 -0.3 1) web-post-tr))
-                          (thumb-tl-place web-post-tl))
-                         ; Tiny little piece leading to the left
-                         (wall-brace thumb-bl-place  0  1 web-post-tr thumb-bl-place  0  1 web-post-tl)
+                           )
+                         (hull
+                          (thumb-tl-place web-post-bl)
+                          (thumb-mr-place web-post-tl)
+                          (thumb-bl-place web-post-tr)
+                           )
+                         (hull
+                          (thumb-tl-place web-post-br)
+                          (thumb-tl-place web-post-bl)
+                          (thumb-mr-place web-post-tl)
+                           )
+                         (hull
+                          (key-place 0 (- lastrow 1) web-post-br)
+                          (thumb-tl-place web-post-tr)
+                          (thumb-tl-place web-post-br)
+                          (thumb-tr-place web-post-tl)
+                          (thumb-mr-place web-post-tr)
+                           )
+                         (hull
+                          (key-place 0 (- lastrow 1) web-post-br)
+                          (key-place 0 (- lastrow 1) web-post-bl)
+                          (thumb-tl-place web-post-tr)
+                          )
                          ))
 
 ; NOTE: Using -1.5 instead of -1 to make these a bit bigger to make room for the hotswaps
