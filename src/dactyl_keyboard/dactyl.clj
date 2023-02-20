@@ -453,7 +453,7 @@
 (def thumb-post-br (translate [(- (/ mount-width 2) post-adj)  (+ (/ mount-height -2) post-adj) 0] web-post))
 
 (def thumb-connectors
-  (if trackball-enabled
+  (if true
     (union
      ; top right vertical
      (triangle-hulls
@@ -1100,12 +1100,12 @@
 (def trackball-tweeners (union
                          (wall-brace thumb-mr-place  0 (- wall-multiplier) web-post-br thumb-br-place  0 -1 web-post-br)))
 (def back-convex-thumb-wall-0 ; thumb tweeners
-  (if trackball-enabled
+  (if true
     trackball-tweeners
     (union
      (wall-brace thumb-mr-place  0 (- wall-multiplier) web-post-bl thumb-br-place  0 -1 web-post-br))))
 (def back-convex-thumb-wall-1 (wall-brace thumb-mr-place  0 (- wall-multiplier) web-post-br thumb-tr-place 0 (- wall-multiplier) thumb-post-br))
-(def back-convex-thumb-wall-2 (if trackball-enabled
+(def back-convex-thumb-wall-2 (if true
                                 ; Back right thumb to the middle one
                                 (triangle-hulls
                                  (thumb-mr-place web-post-br)
@@ -1123,7 +1123,7 @@
 (def thumb-corners ; thumb corners
   (union
   (wall-brace thumb-br-place -1  0 web-post-bl thumb-br-place  0 -1 web-post-bl)
-   (if trackball-enabled nil (wall-brace thumb-bl-place -1  0 web-post-tl thumb-bl-place  0  1 web-post-tl))
+   ; (if trackball-enabled nil (wall-brace thumb-bl-place -1  0 web-post-tl thumb-bl-place  0  1 web-post-tl))
    ))
 
 (def pro-micro-wall (union
