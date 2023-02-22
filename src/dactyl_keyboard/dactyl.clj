@@ -1249,7 +1249,7 @@
 
 (defn screw-insert-all-shapes [bottom-radius top-radius height]
       (union (screw-insert 0 0         bottom-radius top-radius height [7.5 7 0])
-             (screw-insert 0 lastrow   bottom-radius top-radius height (if trackball-enabled [-0.5 33 0] [0 15 0]))
+             (screw-insert 0 lastrow   bottom-radius top-radius height (if trackball-enabled [-0.5 33 0] [0.5 15 0]))
              ;  (screw-insert lastcol lastrow  bottom-radius top-radius height [-5 13 0])
              ;  (screw-insert lastcol 0         bottom-radius top-radius height [-3 6 0])
              (screw-insert lastcol lastrow  bottom-radius top-radius height [-1.5 17 0])
