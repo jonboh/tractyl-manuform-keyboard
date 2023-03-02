@@ -163,6 +163,36 @@
               pcb-holes
   ))
 (spit "things/single-plate.scad" (write-scad single-plate))
+;; choc tester
+(def switch-hole (cube keyswitch-height keyswitch-width 30))
+(def choc-tester
+  (difference 
+    (cube 180 40 10)
+    (translate [-70 -10 0] 
+               (union switch-hole 
+                      (translate [20 0] switch-hole)
+                      (translate [40 0] switch-hole)
+                      (translate [60 0] switch-hole)
+                      (translate [80 0] switch-hole)
+                      (translate [100 0] switch-hole)
+                      (translate [120 0] switch-hole)
+                      (translate [140 0] switch-hole)
+                      (translate [0 20] switch-hole)
+                      (translate [20 20] switch-hole)
+                      (translate [40 20] switch-hole)
+                      (translate [60 20] switch-hole)
+                      (translate [80 20] switch-hole)
+                      (translate [100 20] switch-hole)
+                      (translate [120 20] switch-hole)
+                      (translate [140 20] switch-hole)
+                      )
+    )))
+
+
+(spit "things/choc-tester.scad" (write-scad choc-tester))
+
+
+
 ;;;;;;;;;;;;;;;;
 ;; SA Keycaps ;;
 ;;;;;;;;;;;;;;;;
