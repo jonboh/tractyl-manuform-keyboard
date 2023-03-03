@@ -930,6 +930,7 @@
                            )
                          (bottom-hull
                           (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) web-post))
+                          (left-key-place cornerrow -1 (translate (map + (wall-locate3 -1 0) [wall-thickness 0 0]) web-post))
                           (thumb-tl-place web-post-tl)
                           )
                          (bottom-hull
