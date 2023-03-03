@@ -1212,7 +1212,6 @@
     thumb-walls
     thumb-corners
    (if trackball-enabled nil thumb-to-left-wall)
-   back-convex-thumb-wall-0
    ))
 
 (def usb-holder-ref (key-position 0 0 (map - (wall-locate2  0  -1) [0 (/ mount-height 2) 0])))
