@@ -1298,20 +1298,21 @@
                                      (hull (cut thumb-corners))
                                      (hull (cut thumb-to-left-wall) (translate (key-position (- lastcol 1) (- lastrow 1) [0 0 0]) (square 1 1)))
                                      (hull (cut non-thumb-front-left-walls) (square 1 1))
-                                     (hull (cut non-thumb-back-walls) (square 1 1))
+                                     (cut non-thumb-back-walls)
                                      (hull (cut almost-thumb-back-wall) (square 1 1))
                                      (hull (cut back-pinky-wall) (translate (key-position lastcol 0 [0 0 0]) (square keyswitch-width keyswitch-height)))
                                       ))
 (def plate-patches 
-  ; (color [220/255 163/255 163/255 1] ; uncomment to easily fill gaps
+  (color [220/255 163/255 163/255 1] ; uncomment to easily fill gaps
            (union
          (translate [11 15 0] (square 3 30))
          (translate [31 15 0] (rotate [0 0 0.2] (square 3 30)))
          (translate [32 -48 0]  (square 5 10))
+         (translate [20 -44 0]  (square 40 20))
          (translate [-44 -34 0] (rotate [0 0 0.7] (square 14 20)))
-         (translate [-7 -48 0] (rotate [0 0 0.7] (square 25 33)))
+         (translate [-5 -49 0] (rotate [0 0 0.7] (square 26 29)))
          )
-         ; )
+       )
   )
 
 (def filled-plate (union
