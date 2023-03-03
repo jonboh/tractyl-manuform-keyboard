@@ -72,8 +72,8 @@
 (def keyswitch-plate-thickness 2.5)
 (def pcb-height 18.2)
 (def pcb-width 19.25)
-(def pcb-plate-thickness 1.15)
-(def pcb-plate-width 0.8)
+(def pcb-plate-thickness 0)
+(def pcb-plate-width 0.1)
 
 (def pcb-hole-height 15.5)
 (def pcb-hole-width 16.5 )
