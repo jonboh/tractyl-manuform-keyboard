@@ -1569,11 +1569,7 @@
                   (union
                    (if trackball-enabled trackball-mount-translated-to-model nil)
                    (translate [0 0 (/ bottom-plate-thickness -2)] plate-attempt)
-                   (translate thumb-tent-origin tent-nut)
-                   (translate index-tent-origin tent-nut)
                    )
-                  (translate thumb-tent-origin tent-thread)
-                  (translate index-tent-origin tent-thread)
                   (translate [0 0 -22] (cube 350 350 40))
                   model-right ; Just rm the whole model-right to make sure there's no obstruction
                   ))
