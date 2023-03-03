@@ -1586,19 +1586,7 @@
 ;        (mirror [-1 0 0] right-plate)
 ; ))
 ;
-; (spit "things/tent-nut.scad" (write-scad
-;                               (include "../nutsnbolts/cyl_head_bolt.scad")
-;                               tent-nut))
 ;
-; (spit "things/tent-foot.scad"
-;       (write-scad tent-foot)
-;       )
-; (spit "things/tent-stand.scad"
-;       (write-scad
-;        (include "../nutsnbolts/cyl_head_bolt.scad")
-;        tent-stand
-;        )
-;       )
 ;
 ; (spit "things/left.scad"
 ;       (write-scad (mirror [-1 0 0] model-right)))
