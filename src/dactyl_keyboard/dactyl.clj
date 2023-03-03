@@ -1530,13 +1530,11 @@
     connectors
     thumb
     thumb-connectors
-;    usb-jack
     (difference (union
                  case-walls
                  screw-insert-outers)
                 ; Leave room to insert the ball
                 (if trackball-enabled (translate trackball-origin trackball-insertion-cyl) nil)
-                usb-jack
                 trrs-holder-hole
                 screw-insert-holes
                 (translate palm-hole-origin (palm-rest-hole-rotate palm-buckle-holes))))
