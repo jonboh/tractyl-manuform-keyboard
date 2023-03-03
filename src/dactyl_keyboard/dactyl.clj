@@ -402,10 +402,10 @@
 (defn thumb-tr-place [shape]
       (->> shape
            (rotate (deg2rad  -7) [1 0 0])
-           (rotate (deg2rad -45) [0 1 0])
+           (rotate (deg2rad -35) [0 1 0])
            (rotate (deg2rad  10) [0 0 1]) ; original 10
            (translate thumborigin)
-           (translate [-21 -18 13]))) ; original 1.5u  (translate [-12 -16 3])
+           (translate [-21 -20 11]))) ; original 1.5u  (translate [-12 -16 3])
 (def trackball-middle-translate [-6.5 6 -0.5])
 (def thumb-tip-offset [-44 -18 -3])
 (def thumb-tip-origin (map + thumborigin thumb-tip-offset))
