@@ -937,31 +937,6 @@
                           (thumb-tl-place web-post-tl)
                           (thumb-tl-place web-post-bl)
                           )
-                         (bottom-hull
-                          (thumb-tl-place web-post-tl)
-                          (thumb-tl-place web-post-bl)
-                          )
-                         (bottom-hull
-                          (thumb-tl-place web-post-bl)
-                          (thumb-bl-place web-post-tl)
-                          (thumb-bl-place (translate (wall-locate2 -1 1) web-post-tl))
-                          (thumb-bl-place (translate (wall-locate2 -2 0) web-post-tl))
-                          )
-                         (hull
-                          (thumb-tl-place web-post-bl)
-                          (thumb-bl-place web-post-tl)
-                          (thumb-bl-place web-post-tr)
-                           )
-                         (hull
-                          (thumb-tl-place web-post-bl)
-                          (thumb-mr-place web-post-tl)
-                          (thumb-bl-place web-post-tr)
-                           )
-                         (hull
-                          (thumb-tl-place web-post-br)
-                          (thumb-tl-place web-post-bl)
-                          (thumb-mr-place web-post-tl)
-                           )
                          (hull
                           (key-place 0 (- lastrow 1) web-post-br)
                           (thumb-tl-place web-post-tr)
@@ -996,10 +971,38 @@
                                                          (wall-brace thumb-mr-place  0 (- wall-multiplier) web-post-br thumb-mr-place  0 (- wall-multiplier) web-post-bl))))
 (def thumb-walls  ; thumb walls
   (union
-   (wall-brace thumb-bl-place -1  0 web-post-bl thumb-br-place -1  0 web-post-tl)
-   (wall-brace thumb-br-place  0 -1 web-post-br thumb-br-place  0 -1 web-post-bl)
-   (wall-brace thumb-br-place -1  0 web-post-tl thumb-br-place -1  0 web-post-bl)
-   (wall-brace thumb-bl-place -1  0 web-post-tl thumb-bl-place -1  0 web-post-bl)))
+    (wall-brace thumb-bl-place -1  0 web-post-bl thumb-br-place -1  0 web-post-tl)
+    (wall-brace thumb-br-place  0 -1 web-post-br thumb-br-place  0 -1 web-post-bl)
+    (wall-brace thumb-br-place -1  0 web-post-tl thumb-br-place -1  0 web-post-bl)
+    (wall-brace thumb-bl-place -1  0 web-post-tl thumb-bl-place -1  0 web-post-bl)
+    (if trackball-enabled 
+      nil
+      (union (bottom-hull
+               (thumb-tl-place web-post-bl)
+               (thumb-bl-place web-post-tl)
+               (thumb-bl-place (translate (wall-locate2 -1 1) web-post-tl))
+               (thumb-bl-place (translate (wall-locate2 -2 0) web-post-tl))
+               )
+             (hull
+               (thumb-tl-place web-post-bl)
+               (thumb-bl-place web-post-tl)
+               (thumb-bl-place web-post-tr)
+               )
+             (hull
+               (thumb-tl-place web-post-bl)
+               (thumb-mr-place web-post-tl)
+               (thumb-bl-place web-post-tr)
+               )
+             (hull
+               (thumb-tl-place web-post-br)
+               (thumb-tl-place web-post-bl)
+               (thumb-mr-place web-post-tl)
+               )
+             )
+      )
+    )
+
+  )
 
 (def thumb-corners ; thumb corners
   (union
