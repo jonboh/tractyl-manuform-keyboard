@@ -1424,27 +1424,6 @@
   (rotate (deg2rad angle) [0 0 1] (translate [(+ tent-ball-rad (/ tent-ball-holder-thickness 2)) 0 (/ tent-foot-thickness 2)] (ball-hook with-hook?)))
   )
 
-(def tent-foot (union
-                (cube tent-foot-width tent-foot-height tent-foot-thickness)
-                (rotated-ball-hook 0 true)
-                (rotated-ball-hook 90 true)
-                (rotated-ball-hook 180 true)
-                (rotated-ball-hook 270 false)
-                 ))
-
-(def thumb-tent-origin (map + [-22 -74 -1] [0 0 0]))
-(def index-tent-origin [-50 22 -1])
-
-(def tent-nut-height 6)
-(def tent-thread
-  (translate [0 0 tent-nut-height] (rotate (deg2rad 180) [0 1 0]
-          (call-module "thread" (+ tent-stand-rad 0.5) (+ tent-nut-height bottom-plate-thickness) tent-stand-thread-lead)
-          ))
-  )
-(def tent-nut (difference
-               (translate [0 0 (/ tent-nut-height 2)] (cylinder (+ tent-stand-rad 1.5) tent-nut-height))
-               tent-thread
-                ))
 
 ;;;;;;;;;;;;;;;
 ;; Palm Rest ;;
@@ -1505,9 +1484,6 @@
                       (difference
                        (translate [0 (+ (- buckle-length) (- support-length)) (- (/ palm-screw-height 2) (/ 5 2))]
                                   (cube 20 20 (- palm-screw-height 0.5))) ; substracted minus one to make the bottom flat when buckle-height==4
-                       (translate [1.5 (+ (- buckle-length) (- support-length)) (+ (/ 5 -2) palm-screw-height)]
-                                  (rotate (deg2rad 180) [1 0 0]
-                                          (call-module "thread" (+ tent-stand-rad 0.5) palm-screw-height tent-stand-thread-lead)))
                        ; Rm the top bit sticking out
                        (hull positioned-palm-support
                              (translate [5 (+ (- buckle-length) (- support-length)) (+ palm-screw-height 20)]
@@ -1525,11 +1501,9 @@
 ))
 ;
 ; (spit "things/palm-rest.scad" ( write-scad
-;                                 (include "../nutsnbolts/cyl_head_bolt.scad") ; this line is not being written!!
 ;                                 palm-rest))
 ; (spit "things/left-palm-rest.scad" (
 ;                                      write-scad
-;                                      (include "../nutsnbolts/cyl_head_bolt.scad")
 ;                                      (mirror [-1 0 0] palm-rest)
 ;                                      ))
 ;
