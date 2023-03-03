@@ -952,7 +952,7 @@
                          ))
 
 ; NOTE: Using -1.5 instead of -1 to make these a bit bigger to make room for the hotswaps
-(def wall-multiplier (if trackball-enabled 1.5 1))
+(def wall-multiplier (if trackball-enabled 1 1))
 (def trackball-tweeners (union
                          (wall-brace thumb-mr-place  0 (- wall-multiplier) web-post-br thumb-br-place  0 -1 web-post-br)))
 (def back-convex-thumb-wall-0 ; thumb tweeners
@@ -982,6 +982,11 @@
                (thumb-bl-place web-post-tl)
                (thumb-bl-place (translate (wall-locate2 -1 1) web-post-tl))
                (thumb-bl-place (translate (wall-locate2 -2 0) web-post-tl))
+               )
+             (hull
+               (thumb-tl-place web-post-br)
+               (thumb-mr-place web-post-tl)
+               (thumb-mr-place web-post-tr)
                )
              (hull
                (thumb-tl-place web-post-bl)
