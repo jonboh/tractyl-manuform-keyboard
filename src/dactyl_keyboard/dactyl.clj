@@ -1015,7 +1015,7 @@
                      (for [x (range 1 ncols)] (key-wall-brace x 0 0 1 web-post-tl (dec x) 0 0 1 web-post-tr))
   ))
 (def back-pinky-wall (for [x (range 4 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl x       cornerrow 0 -1 web-post-br)))
-(def non-thumb-walls (union
+(def non-thumb-front-left-walls (union
                             ; left wall
                             (for [y (range 0 lastrow)] (union (wall-brace (partial left-key-place y 1)       -1 0 web-post (partial left-key-place y -1) -1 0 web-post)
                                                               (hull (key-place 0 y web-post-tl)
@@ -1027,18 +1027,23 @@
                                                                     (key-place 0 (dec y) web-post-bl)
                                                                     (left-key-place y        1 web-post)
                                                                     (left-key-place (dec y) -1 web-post))))
+                            ; front wall
                             (wall-brace (partial key-place 0 0) 0 1 web-post-tl (partial left-key-place 0 1) 0 1 web-post)
                             (wall-brace (partial left-key-place 0 1) 0 1 web-post (partial left-key-place 0 1) -1 0 web-post)
-                            ; front wall
+                            )
+  )
+
+(def non-thumb-back-walls
+  (union
                             (key-wall-brace 3 lastrow 0 -1 web-post-bl 3 lastrow 0 -1 web-post-br)
                             (key-wall-brace 3 lastrow 0 -1 web-post-br 4 cornerrow 0 -1 web-post-bl)
 
                             (for [x (range 5 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl (dec x) cornerrow 0 -1 web-post-br))
-                            ; Right before the start of the thumb
-                            (wall-brace thumb-tr-place  0 -1 thumb-post-br (partial key-place 3 lastrow)  0 -1 web-post-bl)
                             )
-  )
-
+)
+(def almost-thumb-back-wall
+                            (wall-brace thumb-tr-place  0 -1 thumb-post-br (partial key-place 3 lastrow)  0 -1 web-post-bl)
+)
 (def thumb-connectors
   (if true
     (union
@@ -1206,17 +1211,19 @@
 
 (def case-walls
   (union
-   right-wall
-   back-pinky-wall
-   pro-micro-wall
-    non-thumb-walls
-   back-convex-thumb-wall-0
-   back-convex-thumb-wall-1
-   back-convex-thumb-wall-2
+    right-wall
+    back-pinky-wall
+    pro-micro-wall
+    non-thumb-front-left-walls
+    non-thumb-back-walls
+    almost-thumb-back-wall
+    back-convex-thumb-wall-0
+    back-convex-thumb-wall-1
+    back-convex-thumb-wall-2
     thumb-walls
     thumb-corners
-   (if trackball-enabled nil thumb-to-left-wall)
-   ))
+    (if trackball-enabled nil thumb-to-left-wall)
+    ))
 
 
 
@@ -1350,9 +1357,8 @@
 (def bottom-plate-thickness 2)
 (def plate-outline-semifilled (union
                                      ; pro micro wall
-                                     (for [x (range 0 (- ncols 1))] (hull  (cut (key-wall-brace x 0 0 1 web-post-tl x       0 0 1 web-post-tr)) (translate (key-position x lastrow [0 0 0]) (square (+ keyswitch-width 15) keyswitch-height))))
+                                     (for [x (range 0 (- ncols 1))] (hull  (cut (key-wall-brace x 0 0 1 web-post-tl x       0 0 1 web-post-tr)) (translate (key-position x lastrow [0 0 0]) (square (+ keyswitch-width 5) keyswitch-height))))
                                      (for [x (range 1 ncols)] (hull (cut (key-wall-brace x 0 0 1 web-post-tl (dec x) 0 0 1 web-post-tr)) (translate (key-position x 2 [0 0 0]) (square 1 1))))
-                                     (hull (cut back-pinky-wall) (translate (key-position lastcol 0 [0 0 0]) (square keyswitch-width keyswitch-height)))
                                      (hull (cut thumb-walls) (translate bl-thumb-loc (square 1 1)))
                                      right-wall-plate
                                      (hull (cut back-convex-thumb-wall-0) (translate bl-thumb-loc (square 1 1)))
@@ -1360,12 +1366,28 @@
                                      (hull (cut back-convex-thumb-wall-2) (translate bl-thumb-loc (square 1 1)))
                                      (hull (cut thumb-corners))
                                      (hull (cut thumb-to-left-wall) (translate (key-position (- lastcol 1) (- lastrow 1) [0 0 0]) (square 1 1)))
-                                     (cut non-thumb-walls)
+                                     (hull (cut non-thumb-front-left-walls) (square 1 1))
+                                     (hull (cut non-thumb-back-walls) (square 1 1))
+                                     (hull (cut almost-thumb-back-wall) (square 1 1))
+                                     (hull (cut back-pinky-wall) (translate (key-position lastcol 0 [0 0 0]) (square keyswitch-width keyswitch-height)))
                                       ))
-(def filled-plate (union ; hacky way to fill this non-convex geometry. Hull would remove some inside corners
-                         plate-outline-semifilled
-                        (for [x (range 1 0.6 -0.03)] (scale [x x x] plate-outline-semifilled ))
-                        ))
+(def plate-patches 
+  ; (color [220/255 163/255 163/255 1] ; uncomment to easily fill gaps
+           (union
+         (translate [11 15 0] (square 3 30))
+         (translate [31 15 0] (rotate [0 0 0.2] (square 3 30)))
+         (translate [32 -48 0]  (square 5 10))
+         (translate [-44 -34 0] (rotate [0 0 0.7] (square 14 20)))
+         (translate [-7 -48 0] (rotate [0 0 0.7] (square 25 33)))
+         )
+         ; )
+  )
+
+(def filled-plate (union
+                    plate-outline-semifilled
+                    plate-patches
+                    ))
+
 (def plate-attempt (difference
                     (extrude-linear {:height bottom-plate-thickness}
                                     filled-plate
