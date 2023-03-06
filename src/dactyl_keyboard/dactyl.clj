@@ -192,6 +192,24 @@
 (spit "things/choc-tester.scad" (write-scad choc-tester))
 
 
+;; usb-holder-clip
+(def clip-lenght 16)
+(def clip-width 4)
+(def usb-case-height 4)
+(def usb-case-width 22)
+(def usb-holder-clip 
+  (union
+    (translate [0 (/ clip-width 2) (/ usb-case-height 2)] 
+               (cube usb-case-width clip-width usb-case-height))
+    (translate [0 (/ clip-lenght 2) (+ usb-case-height (/ clip-width 2))] 
+               (cube 9 clip-lenght clip-width))
+    (translate [(+ (/ usb-case-width 2) (/ clip-width 2)) (/ clip-lenght 2) (/ clip-width 2)] 
+               (cube clip-width clip-lenght clip-width))
+    (translate [(- (+ (/ usb-case-width 2) (/ clip-width 2))) (/ clip-lenght 2) (/ clip-width 2)] 
+               (cube clip-width clip-lenght clip-width))
+    ))
+
+(spit "things/usb-holder-clip.scad" (write-scad usb-holder-clip))
 
 ;;;;;;;;;;;;;;;;
 ;; SA Keycaps ;;
