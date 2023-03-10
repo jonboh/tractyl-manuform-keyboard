@@ -34,11 +34,11 @@
                                :else [0 -5 1.5]))
 
 ; general position of the thumb cluster
-(def thumb-offsets [6 0 10])
+(def thumb-offsets [-4 0 10])
 
-(def keyboard-z-offset 17)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
+(def keyboard-z-offset 11)               ; controls overall height; original=9 with centercol=3; use 16 for centercol=2
 
-(def extra-width -1.5)                   ; extra space between the base of keys; original= 2
+(def extra-width -2.25)                   ; extra space between the base of keys; original= 2
 (def extra-height -5)                  ; original= 0.5
 
 (def wall-z-offset -5)                 ; original=-15 length of the first downward-sloping part of the wall (negative)
@@ -69,7 +69,7 @@
 
 (def keyswitch-height 14.2) ;; Was 14.1, then 14.25
 (def keyswitch-width 14.2)
-(def keyswitch-plate-thickness 2.5)
+(def keyswitch-plate-thickness 2)
 (def pcb-height 18.2)
 (def pcb-width 19.25)
 (def pcb-plate-thickness 0)
@@ -162,7 +162,7 @@
   (difference solid-single-plate
               pcb-holes
   ))
-(spit "things/single-plate.scad" (write-scad single-plate))
+; (spit "things/single-plate.scad" (write-scad single-plate))
 ;; choc tester
 (def switch-hole (cube keyswitch-height keyswitch-width 30))
 (def choc-tester
@@ -189,7 +189,7 @@
     )))
 
 
-(spit "things/choc-tester.scad" (write-scad choc-tester))
+; (spit "things/choc-tester.scad" (write-scad choc-tester))
 
 
 ;; usb-holder-clip
@@ -420,28 +420,28 @@
 (defn thumb-tr-place [shape]
       (->> shape
            (rotate (deg2rad  -7) [1 0 0])
-           (rotate (deg2rad -35) [0 1 0])
+           (rotate (deg2rad -20) [0 1 0])
            (rotate (deg2rad  10) [0 0 1]) ; original 10
            (translate thumborigin)
-           (translate [-21 -20 11]))) ; original 1.5u  (translate [-12 -16 3])
+           (translate [-17 -20 6]))) ; original 1.5u  (translate [-12 -16 3])
 (def trackball-middle-translate [-6.5 6 -0.5])
 (def thumb-tip-offset [-44 -18 -3])
 (def thumb-tip-origin (map + thumborigin thumb-tip-offset))
-(def tl-thumb-loc (map + [-48 -13 -5]))
+(def tl-thumb-loc (map + [-44 -12 -2]))
 (defn thumb-tl-place [shape]
       (->> shape
            (rotate (deg2rad  20) [1 0 0])
-           (rotate (deg2rad  -50) [0 1 0])
+           (rotate (deg2rad  -45) [0 1 0])
            (rotate (deg2rad  30) [0 0 1]) ; original 10
            (translate thumborigin)
            (translate tl-thumb-loc))) ; original 1.5u (translate [-32 -15 -2])))
 
-(def mr-thumb-loc (map + [-26.5 -34.5 -2] (if trackball-enabled trackball-middle-translate trackball-middle-translate)))
+(def mr-thumb-loc (map + [-26 -34.5 -4] (if trackball-enabled trackball-middle-translate trackball-middle-translate)))
 (defn thumb-mr-place [shape]
       (->> shape
-           (rotate (deg2rad  -18) [1 0 0])
-           (rotate (deg2rad -55) [0 1 0])
-           (rotate (deg2rad  37) [0 0 1])
+           (rotate (deg2rad  -15) [1 0 0])
+           (rotate (deg2rad -45) [0 1 0])
+           (rotate (deg2rad  32) [0 0 1])
            (translate thumborigin)
            (translate mr-thumb-loc)))
 
@@ -681,7 +681,7 @@
               (rotated_dowell 120)
               (rotated_dowell 240))
   )
-(def vertical-hold 0) ; Millimeters of verticle hold after the curviture of the sphere ends to help hold the ball in
+(def vertical-hold -5) ; Millimeters of verticle hold after the curviture of the sphere ends to help hold the ball in
 
 (def cup (
            difference
@@ -690,7 +690,8 @@
             (translate [0, 0, (/ vertical-hold 2)] (cylinder outer-cup-radius vertical-hold)) ; add a little extra to hold ball in
             )
            (sphere trackball-radius-plus-bearing)
-           (translate [0, 0, (+ outer-cup-radius vertical-hold)] (cylinder outer-cup-radius outer-cup-radius)) ; cut out the upper part of the main cup spher
+           (translate [0, 0, (+ outer-cup-radius vertical-hold)] 
+                      (cylinder outer-cup-radius outer-cup-radius)) ; cut out the upper part of the main cup spher
            )
   )
 
@@ -832,13 +833,16 @@
     rotated-dowells
     ; Subtract out the bottom trim clearing a hole for the sensor
     rotated-bottom-trim
+    (translate [0 0 30] (cube 60 60 40))
     )
    (sensor-hole-angle sensor-holder)
    )
   )
 
+(spit "things/trackball-mount.scad" (write-scad trackball-mount))
+
 (def raised-trackball (translate [0 0 trackball-raise] (sphere (+ (/ trackball-width 2) 0.5))))
-(def trackball-origin (map + thumb-tip-origin [-8.5 10 -10]))
+(def trackball-origin (map + thumb-tip-origin [-8.5 10 -5]))
 
 ;;;;;;;;;;
 ;; Case ;;
@@ -905,13 +909,8 @@
    ; clunky bit on the top left thumb connection  (normal connectors don't work well)
    ; merging with hulls to the trackball mount
    (difference
-    (union
      ; Thumb to rest of case
-     (bottom-hull
-      (bottom 25 (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) big-boi-web-post)))
-      ;             (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) web-post))
-      (thumb-bl-place web-post-tr)
-      (thumb-bl-place web-post-tl)))
+    (translate [-50 -40 0] (cylinder (-(+ trackball-radius holder-thickness) 7) 13))
     key-clearance
     thumb-key-clearance
     (translate trackball-origin rotated-bottom-trim)
@@ -919,22 +918,22 @@
     ))
   )
 
-(def trackball-to-case (difference (union
-                        ; Trackball mount to left outside of case
-                        (hull
-                         (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) big-boi-web-post))
-                         case-filler-cup)
-                        ; Gap between trackball mount and top key
-                        (hull
-                         (key-place 0 cornerrow web-post-bl)
-                         (key-place 0 cornerrow web-post-br)
-                         (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) big-boi-web-post)))
-                        ; Between the trackball and the outside of the case near the bottom, to ensure a nice seal
-                        (hull
-                         (bottom 25 (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) big-boi-web-post)))
-                         (translate trackball-origin (trackball-mount-rotate cup))))
-                                   (translate trackball-origin rotated-dowells)
-                                   (translate trackball-origin rotated-bottom-trim)))
+; (def trackball-to-case (difference (union
+;                         ; Trackball mount to left outside of case
+;                         (hull
+;                          (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) big-boi-web-post))
+;                          case-filler-cup)
+;                         ; Gap between trackball mount and top key
+;                         (hull
+;                          (key-place 0 cornerrow web-post-bl)
+;                          (key-place 0 cornerrow web-post-br)
+;                          (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) big-boi-web-post)))
+;                         ; Between the trackball and the outside of the case near the bottom, to ensure a nice seal
+;                         (hull
+;                          (bottom 25 (left-key-place cornerrow -1 (translate (wall-locate3 -1 0) big-boi-web-post)))
+;                          (translate trackball-origin (trackball-mount-rotate cup))))
+;                                    (translate trackball-origin rotated-dowells)
+;                                    (translate trackball-origin rotated-bottom-trim)))
 
 (def thumb-to-left-wall (union
                          ; clunky bit on the top left thumb connection  (normal connectors don't work well)
@@ -1218,7 +1217,7 @@
              ;  (screw-insert lastcol 0         bottom-radius top-radius height [-3 6 0])
              (screw-insert lastcol lastrow  bottom-radius top-radius height [-1.5 17 0])
              (screw-insert lastcol 0         bottom-radius top-radius height [-1 2 0])
-             (screw-insert 1 lastrow         bottom-radius top-radius height [0 -30 0])
+             (screw-insert 1 lastrow         bottom-radius top-radius height [-8 -30 0])
              ))
 
 ; Hole Depth Y: 4.4
@@ -1329,11 +1328,12 @@
   (color [220/255 163/255 163/255 1] ; uncomment to easily fill gaps
            (union
          (translate [11 15 0] (square 3 30))
-         (translate [31 15 0] (rotate [0 0 0.2] (square 3 30)))
-         (translate [32 -48 0]  (square 5 10))
+         (translate [29 15 0] (rotate [0 0 0.15] (square 3 30)))
          (translate [20 -44 0]  (square 40 20))
-         (translate [-44 -34 0] (rotate [0 0 0.7] (square 14 20)))
-         (translate [-5 -49 0] (rotate [0 0 0.7] (square 26 29)))
+         (translate [-40 -34 0] (rotate [0 0 0.7] (square 14 20)))
+         (translate [-15 -49 0] (rotate [0 0 0] (square 34 20)))
+         (translate [-5 -60 0] (rotate [0 0 0] (square 7 7)))
+         ; (translate [-10 -49 0] (rotate [0 0 0.7] (square 26 29)))
          )
        )
   )
@@ -1343,6 +1343,8 @@
                     plate-patches
                     ))
 
+(spit "things/filled-plate.scad" (write-scad filled-plate))
+
 (def plate-attempt (difference
                     (extrude-linear {:height bottom-plate-thickness}
                                     filled-plate
@@ -1351,7 +1353,6 @@
                     ))
 
 
-; (spit "things/test.scad" (write-scad plate-attempt))
 
 (def hand-on-test
   (translate [-5 -60 92]
@@ -1515,18 +1516,28 @@
                  case-walls
                  screw-insert-outers)
                 ; Leave room to insert the ball
-                (if trackball-enabled (translate trackball-origin trackball-insertion-cyl) nil)
+                (if trackball-enabled (union 
+                                        (translate [-52 -36 19] 
+                                                   (rotate [0 (deg2rad 90) (deg2rad 15)] 
+                                                           (cylinder (+ trackball-radius holder-thickness) 8)))
+                                        (translate [-52 -25 27] 
+                                                   (rotate [(deg2rad -20) 0 (deg2rad 15)] 
+                                                           (cube 10 10 10)))
+                                        (translate trackball-origin trackball-insertion-cyl)) nil)
                 trrs-holder-hole
                 screw-insert-holes
                 (translate palm-hole-origin (palm-rest-hole-rotate palm-buckle-holes))))
-   (if trackball-enabled (translate trackball-origin (dowell-angle raised-trackball)) nil)
-   (translate [0 0 -20] (cube 350 350 40))))
+   ; (if trackball-enabled (translate trackball-origin (dowell-angle raised-trackball)) nil)
+    ; (translate [-50 -26 20] (cube 20 20 20))
+    ; (translate [-50 -29 10] (rotate [45 0 0] (cube 20 20 20)))
+   (translate [0 0 -20] (cube 350 350 40)) ; remove below floor
+   ))
 
 (def trackball-mount-translated-to-model (difference
                                           (union
                                            (translate trackball-origin trackball-mount)
                                            trackball-walls
-                                           trackball-to-case
+                                           ; trackball-to-case
                                            ; key-clearance ; uncomment to check clearance of trackball
                                            ; thumb-key-clearance ; uncomment to check clearance of trackball
                                            )
@@ -1552,25 +1563,23 @@
                    (translate [0 0 (/ bottom-plate-thickness -2)] plate-attempt)
                    )
                   (translate [0 0 -22] (cube 350 350 40))
-                  model-right ; Just rm the whole model-right to make sure there's no obstruction
                   ))
 ;
-; (spit "things/right-plate.scad"
-;       (write-scad
-;        (include "../nutsnbolts/cyl_head_bolt.scad")
-;        right-plate
-;        ))
-;
-; (spit "things/left-plate.scad"
-;       (write-scad
-;        (include "../nutsnbolts/cyl_head_bolt.scad")
-;        (mirror [-1 0 0] right-plate)
-; ))
-;
+(spit "things/right-plate.scad"
+      (write-scad
+      right-plate
+       ))
+; ;
+(spit "things/left-plate.scad"
+      (write-scad
+       (include "../nutsnbolts/cyl_head_bolt.scad")
+       (mirror [-1 0 0] right-plate)
+))
 ;
 ;
-; (spit "things/left.scad"
-;       (write-scad (mirror [-1 0 0] model-right)))
+;
+(spit "things/left.scad"
+      (write-scad (mirror [-1 0 0] model-right)))
 ; (spit "things/tent-all.scad" (write-scad
 ;                               (include "../nutsnbolts/cyl_head_bolt.scad")
 ;                               (union
@@ -1578,19 +1587,19 @@
 ;                                (translate [0 0 (+ 3 tent-ball-rad (/ tent-foot-thickness 2))] tent-stand)
 ;                                 )
 ;                                ))
-; ;
+; ; ;
 ; (spit "things/right-test.scad"
 ;       (write-scad
 ;       (include "../nutsnbolts/cyl_head_bolt.scad")
 ;        (difference
 ;         (union
 ;          ; hand-on-test
-;          (color [220/255 120/255 120/255 1] pcb-clearance)
-;          ; (color [220/255 163/255 163/255 1] right-plate)
+;          ; (color [220/255 120/255 120/255 1] pcb-clearance)
+;          (color [220/255 163/255 163/255 1] right-plate)
 ;          model-right
-;          (translate (map + palm-hole-origin [0 (+ buckle-length 3) (/ buckle-height 2)])
-;                     (palm-rest-hole-rotate palm-rest))
-;         (if trackball-enabled (translate trackball-origin test-ball) nil)
+;          ; (translate (map + palm-hole-origin [0 (+ buckle-length 3) (/ buckle-height 2)])
+;          ;            (palm-rest-hole-rotate palm-rest))
+;         ; (if trackball-enabled (translate trackball-origin test-ball) nil)
 ;          thumbcaps
 ;          caps)
 ;
