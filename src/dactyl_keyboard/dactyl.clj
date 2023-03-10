@@ -1217,7 +1217,7 @@
              ;  (screw-insert lastcol 0         bottom-radius top-radius height [-3 6 0])
              (screw-insert lastcol lastrow  bottom-radius top-radius height [-1.5 17 0])
              (screw-insert lastcol 0         bottom-radius top-radius height [-1 2 0])
-             (screw-insert 1 lastrow         bottom-radius top-radius height [-8 -30 0])
+             (screw-insert 1 lastrow         bottom-radius top-radius height [-9 -30 0])
              ))
 
 ; Hole Depth Y: 4.4
