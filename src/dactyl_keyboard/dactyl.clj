@@ -1331,7 +1331,7 @@
          (translate [29 15 0] (rotate [0 0 0.15] (square 3 30)))
          (translate [20 -44 0]  (square 40 20))
          (translate [-40 -34 0] (rotate [0 0 0.7] (square 14 20)))
-         (translate [-15 -49 0] (rotate [0 0 0] (square 34 20)))
+         (translate [-15 -48 0] (rotate [0 0 0] (square 34 20)))
          (translate [-5 -60 0] (rotate [0 0 0] (square 7 7)))
          ; (translate [-10 -49 0] (rotate [0 0 0.7] (square 26 29)))
          )
