@@ -1410,88 +1410,45 @@
 ;;;;;;;;;;;;;;;
 ;; Palm Rest ;;
 ;;;;;;;;;;;;;;;
-(def palm-length 80)
-(def palm-width 80)
-(def palm-cutoff 32)
-(def palm-support (translate [0 -10 (- 10 palm-cutoff) ] 
-                             (difference
-                               (resize [palm-width palm-length 80] (sphere 240))
-                               (translate [0 0 (- (- 100 palm-cutoff))] (cube 400 400 200))
-                               )))
+(defn extrude-rotate_
+  ([{:keys [convexity angle]} block]
+   (let [args (merge {:convexity convexity :angle angle} {:fn 250})]
+     `(:extrude-rotate ~args ~block))))
+(defn circle_ [r]
+  (let [args (merge {:r r} {:fn 10})]
+    `(:circle ~args)))
 
-(defn palm-rest-hole-rotate [h] (rotate (deg2rad -3) [0 0 1] h))
-(def palm-hole-origin (map + (key-position 3 (+ cornerrow 1) (wall-locate3 0 -1)) [-1.5 -12 -11]) )
+(def palm-profile (union 
+                    (hull 
+                      (translate [0 -15] (rotate (deg2rad 3) [0 0 1](square 40 30)))
+                    (translate [1.65 20] (rotate (deg2rad -7) [0 0 1] (square 40 40)))
+                      ; (translate [19.5 0] (circle 40))
+                               )
+                    )
+  )
+; (def palm-rest-block (translate [15 -90 10] (cube 80 80 20)))
+(def palm-rest-extrude 
+  ( rotate (deg2rad 90) [0 1 0] 
+           (extrude-rotate_ { :angle 90 }
+                            (translate [-300 0] palm-profile)
+                            )
+           )
+  )
 
-(def triangle-length 7)
-(def triangle-width 5)
-; Make the buckle holes 2mm longer because the holes to the case aren't perfectly straight, which causes some problems.
-(def buckle-width-adjust 0)
-(def buckle-width 12)
-(def buckle-thickness 3)
-(def buckle-length 3.7)
-(def buckle-end-length 14)
-(def buckle-height 4.5) ; this will make the print much easier
-(def buckle-end-width (- buckle-width (* 2 buckle-thickness)))
-(def palm-buckle (buckle
-                  :include-middle true
-                  :triangle-length triangle-length
-                  :triangle-width triangle-width
-                  :buckle-width-adjust buckle-width-adjust
-                  :buckle-width buckle-width
-                  :buckle-thickness buckle-thickness
-                  :buckle-length buckle-length
-                  :buckle-end-length buckle-end-length
-                  :buckle-height buckle-height
-                   ))
-(def palm-buckle-holes (buckle-holes
-                        :buckle-length buckle-length
-                        :buckle-thickness buckle-thickness
-                        :buckle-width buckle-width
-                        :buckle-width-adjust buckle-width-adjust
-                        :triangle-width triangle-width
-                        :triangle-length triangle-length
-                        :buckle-height buckle-height
-                         ))
-(def support-length 35)
-(def palm-screw-height 40)
-(def positioned-palm-support (->> palm-support
-                                  (rotate (deg2rad 00) [0 0 1])
-                                  (rotate (deg2rad 5) [1 0 0])
-                                  (rotate (+ tenting-angle (deg2rad 00)) [0 1 0])
-                                  (translate [2 -25 15]
-                                             )))
-(def palm-attach-rod (union
-                      (translate [0 (+ (- buckle-length) (/ support-length -2) (/ (+ tent-stand-rad 0.5) 2)) 0]
-                                 (cube buckle-end-width (- support-length (+ tent-stand-rad 0.5)) buckle-height))
-                      (difference
-                       (translate [0 (+ (- buckle-length) (- support-length)) (- (/ palm-screw-height 2) (/ 5 2))]
-                                  (cube 20 20 (- palm-screw-height 0.5))) ; substracted minus one to make the bottom flat when buckle-height==4
-                       ; Rm the top bit sticking out
-                       (hull positioned-palm-support
-                             (translate [5 (+ (- buckle-length) (- support-length)) (+ palm-screw-height 20)]
-                                        (cube 13 13 0.1))
-                       ))
+(def cutoff 300)
+(def palm-rest-diff (difference palm-rest-extrude (translate [0 0 (/ cutoff 2)] (cube 1000 1000 cutoff))))
+(def palm-rest-positioned (translate [15 -55 (- cutoff)] palm-rest-diff))
 
-                      palm-buckle
-                      ))
-
-(def palm-rest (union
-                positioned-palm-support
-                ; Subtract out the part of the rod that's sticking up
-
-                 palm-attach-rod
-))
+(def palm-rest (difference palm-rest-positioned
+                 (translate [0 0 bottom-plate-thickness] case-walls))
+)
 ;
-; (spit "things/palm-rest.scad" ( write-scad
-;                                 palm-rest))
-; (spit "things/left-palm-rest.scad" (
-;                                      write-scad
-;                                      (mirror [-1 0 0] palm-rest)
-;                                      ))
-;
-; (spit "things/palm-attach-test.scad" (write-scad
-;                                        palm-attach-rod
-;                                        ))
+(spit "things/palm-rest.scad" ( write-scad
+                                palm-rest))
+(spit "things/left-palm-rest.scad" (
+                                     write-scad
+                                     (mirror [-1 0 0] palm-rest)
+                                     ))
 
 
 (def trackball-subtract (union
