@@ -1420,27 +1420,44 @@
 
 (def palm-profile (union 
                     (hull 
-                      (translate [0 -15] (rotate (deg2rad 3) [0 0 1](square 40 30)))
-                    (translate [1.65 20] (rotate (deg2rad -7) [0 0 1] (square 40 40)))
+                      (translate [0 -18] (rotate (deg2rad 3) [0 0 1](square 40 30)))
+                    (translate [2.5 20] (rotate (deg2rad -10) [0 0 1] (square 40 40)))
                       ; (translate [19.5 0] (circle 40))
                                )
                     )
   )
 ; (def palm-rest-block (translate [15 -90 10] (cube 80 80 20)))
-(def palm-rest-extrude 
-  ( rotate (deg2rad 90) [0 1 0] 
-           (extrude-rotate_ { :angle 90 }
-                            (translate [-300 0] palm-profile)
-                            )
-           )
+(def palm-rest-straight
+  (translate [0 -20 0]
+             ( rotate (deg2rad -90) [0 0 1] 
+                      ( rotate (deg2rad 90) [0 1 0] 
+                               (extrude-linear {:height 40 :twist 0 :convexity 0}
+                                               (translate [-50 0] palm-profile)
+                                               )
+                               )
+                      )
+             )
+  )
+(def palm-rest-curved
+  (translate [0 -40 0] 
+             ( rotate (deg2rad 90) [0 1 0] 
+                      (extrude-rotate_ { :angle 90 }
+                                       (translate [-50 0] palm-profile)
+                                       )
+                      )
+             )
   )
 
-(def cutoff 300)
+(def palm-rest-extrude (union palm-rest-straight palm-rest-curved) )
+
+(def cutoff 45)
 (def palm-rest-diff (difference palm-rest-extrude (translate [0 0 (/ cutoff 2)] (cube 1000 1000 cutoff))))
 (def palm-rest-positioned (translate [15 -55 (- cutoff)] palm-rest-diff))
 
 (def palm-rest (difference palm-rest-positioned
-                 (translate [0 0 bottom-plate-thickness] case-walls))
+                 (translate [0 0 bottom-plate-thickness] case-walls)
+                (translate [47 -60 15] (cube 40 10 30)) 
+                 )
 )
 ;
 (spit "things/palm-rest.scad" ( write-scad
